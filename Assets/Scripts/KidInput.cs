@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
 
-public class KidInput : MonoBehaviour
+public class KidInput : Singleton<KidInput>
 {
     public const string MOVE_ACTION_NAME = "Move";
     public const string FIRE_ACTION_NAME = "Fire";
@@ -19,8 +19,10 @@ public class KidInput : MonoBehaviour
     private Dictionary<InputAction, List<Action>> onPerformActions = new Dictionary<InputAction, List<Action>>();
     private Dictionary<InputAction, List<Action>> onStopActions = new Dictionary<InputAction, List<Action>>();
 
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+        
         MoveAction = playerInput.actions.FindAction(MOVE_ACTION_NAME);
         FireAction = playerInput.actions.FindAction(FIRE_ACTION_NAME);
         DashAction = playerInput.actions.FindAction(DASH_ACTION_NAME);

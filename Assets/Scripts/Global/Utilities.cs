@@ -6,6 +6,17 @@ using UnityEngine.InputSystem;
 
 public static class Utilities
 {
+    public static Vector3 GetScreenToWorldPoint(Vector3 position) => Camera.main.ScreenToWorldPoint(position);
+    public static Vector2 Get2DScreenToWorldPoint(Vector2 position) => GetScreenToWorldPoint(position);
+
+    public static Vector3 GetMouseWorldPosition()
+    {
+        Vector3 mousePos = Mouse.current.position.ReadValue();
+        return Camera.main.ScreenToWorldPoint(mousePos);
+    }
+    public static Vector2 Get2DMouseWorldPosition() => GetMouseWorldPosition();
+    public static Vector2 GetMousePosition() => Mouse.current.position.ReadValue();
+    
     public static T GetRandomOf<T>(this List<T> myList)
     {
         if (myList.Count == 0) return default;
