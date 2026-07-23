@@ -1294,7 +1294,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cb006c8e9e71bfbf83178c906e0efbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Candle
-  maxCandleDuration: 20
+  maxCandleDuration: 15
   maxBulletCount: 15
   shotDelay: 0.1
   reloadTime: 1.6
@@ -1304,6 +1304,7 @@ MonoBehaviour:
   globalLight: {fileID: 619394801}
   candleLight: {fileID: 846003476}
   volume: {fileID: 2075217358}
+  globalLightLerp: 2
   darknessColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!114 &1102647949
 MonoBehaviour:

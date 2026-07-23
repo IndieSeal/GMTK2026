@@ -17,6 +17,7 @@ public class Candle : MonoBehaviour
         volume.profile.TryGet(out vignette);
 
         baseGlobalLightColor = globalLight.color;
+        lerpedGlobalLightColor = baseGlobalLightColor;
 
         candleTimer = maxCandleDuration;
         BulletCount = maxBulletCount;
@@ -119,6 +120,10 @@ public class Candle : MonoBehaviour
     [SerializeField] private Light2D candleLight;
     [SerializeField] private Volume volume;
     private Color baseGlobalLightColor;
+    private Color lerpedGlobalLightColor;
+
+    [Header("Transition Speeds")]
+    [SerializeField] private float globalLightLerp = 2;
 
     [Header("Darkness")]
     [SerializeField] private Color darknessColor = Color.black;
@@ -126,11 +131,10 @@ public class Candle : MonoBehaviour
 
     private void HandleDarkness()
     {
-        Color currentGlobalLightColor = globalLight.color;
-        currentGlobalLightColor.r = Mathf.Lerp(baseGlobalLightColor.r, darknessColor.r, GetCandleValue());
-        currentGlobalLightColor.g = Mathf.Lerp(baseGlobalLightColor.g, darknessColor.g, GetCandleValue());
-        currentGlobalLightColor.b = Mathf.Lerp(baseGlobalLightColor.b, darknessColor.b, GetCandleValue());
-        globalLight.color = currentGlobalLightColor;
+        Color currentGlobalLightColor = Color.Lerp(baseGlobalLightColor, darknessColor, GetCandleValue());
+
+        lerpedGlobalLightColor = Color.Lerp(lerpedGlobalLightColor, currentGlobalLightColor, globalLightLerp * Time.deltaTime);
+        globalLight.color = lerpedGlobalLightColor;
     }
 
     private void HandleCandleLight()
