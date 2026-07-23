@@ -1,16 +1,15 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using uPools;
 
 public class Candle : MonoBehaviour
 {
     public static event Action OnCandleBurntOut;
-    
-    [Header("Candle Duration")]
-    [SerializeField] private float maxCandleDuration = 10;
-    public float CandleWasteMultiplier { get; set; } = 1;
-    private float candleTimer;
+
+    public KidInput Input => KidInput.Instance;
 
     void Awake()
     {
@@ -20,6 +19,12 @@ public class Candle : MonoBehaviour
         baseGlobalLightColor = globalLight.color;
 
         candleTimer = maxCandleDuration;
+        BulletCount = maxBulletCount;
+    }
+
+    void Start()
+    {
+        Input.SubscribeToInputAction(Input.FireAction, HandleShooting, null, null);
     }
 
     void Update()
@@ -27,19 +32,90 @@ public class Candle : MonoBehaviour
         AddCandleDuration(-Time.deltaTime * CandleWasteMultiplier);
 
         HandleDarkness();
+        HandleCandleLight();
         HandleVignette();
     }
 
-    
-    #region Candle
+    #region Candle Manager
+
+    [Header("Candle Duration")]
+    [SerializeField] private float maxCandleDuration = 10;
+    public float CandleWasteMultiplier { get; set; } = 1;
+    private float candleTimer;
 
     private float GetCandleValue() => Mathf.Lerp(1, 0, candleTimer / maxCandleDuration);
 
     public void AddCandleDuration(float value)
     {
         candleTimer = Mathf.Clamp(candleTimer + value, 0, maxCandleDuration);
-
         if(candleTimer <= 0) OnCandleBurntOut?.Invoke();
+    }
+
+    #endregion
+
+    #region Candle Gun
+
+    [Header("Shooting")]
+    [SerializeField] private int maxBulletCount = 15;
+    [SerializeField] private float shotDelay = 0.1f;
+    public int MaxBulletCount => maxBulletCount;
+    public int BulletCount { get; private set; }
+    public bool CanShoot { get; private set; } = true;
+
+    [Header("Reloading")]
+    [SerializeField] private float reloadTime = 1.6f;
+    private Coroutine reloadCoroutine;
+    public bool IsReloading => reloadCoroutine != null;
+
+    [Header("Bullets")]
+    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField]private float bulletVelocity = 5;
+    [SerializeField] private float bulletDuration = 4;
+    [Space]
+    [SerializeField] private Transform centerTransform;
+
+    private void HandleShooting()
+    {
+        if(reloadCoroutine != null || !CanShoot) return;
+        if(BulletCount <= 0)
+        {
+            StartReload();
+            return;
+        }
+        
+        GameObject instance = SharedGameObjectPool.Rent(bulletPrefab, centerTransform.position, Quaternion.identity);
+        StartCoroutine(HandleBullet(instance));
+        
+        BulletCount--;
+        
+        if(instance.TryGetComponent(out Rigidbody2D rb)){
+            rb.linearVelocity = (Utilities.Get2DMouseWorldPosition() - (Vector2)centerTransform.position).normalized * bulletVelocity;
+        }
+    }
+
+    private void StartReload()
+    {
+        if(reloadCoroutine != null) return;
+
+        reloadCoroutine = StartCoroutine(ReloadSequence());
+    }
+
+    private IEnumerator ReloadSequence()
+    {   
+        yield return new WaitForSeconds(reloadTime);
+
+        BulletCount = maxBulletCount;
+        reloadCoroutine = null;
+    }
+
+    private IEnumerator HandleBullet(GameObject instance)
+    {
+        CanShoot = false;
+        yield return new WaitForSeconds(shotDelay);
+        CanShoot = true;
+        
+        yield return new WaitForSeconds(bulletDuration - shotDelay);
+        SharedGameObjectPool.Return(instance);
     }
 
     #endregion
@@ -48,6 +124,7 @@ public class Candle : MonoBehaviour
     
     [Header("Visuals")]
     [SerializeField] private Light2D globalLight;
+    [SerializeField] private Light2D candleLight;
     [SerializeField] private Volume volume;
     private Color baseGlobalLightColor;
 
@@ -62,6 +139,11 @@ public class Candle : MonoBehaviour
         currentGlobalLightColor.g = Mathf.Lerp(baseGlobalLightColor.g, darknessColor.g, GetCandleValue());
         currentGlobalLightColor.b = Mathf.Lerp(baseGlobalLightColor.b, darknessColor.b, GetCandleValue());
         globalLight.color = currentGlobalLightColor;
+    }
+
+    private void HandleCandleLight()
+    {
+        candleLight.intensity = Mathf.Lerp(1, 0, GetCandleValue());
     }
 
     private void HandleVignette()

@@ -3,8 +3,9 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public KidInput Input => KidInput.Instance;
+    
     [Header("Components")]
-    [SerializeField] private KidInput input;
     [SerializeField] private Rigidbody2D rb;
 
     [Header("Moving")]
@@ -21,8 +22,8 @@ public class PlayerMovement : MonoBehaviour
 
     void OnEnable()
     {
-        input.SubscribeToInputAction(input.MoveAction, null, ChangeMovingDirection, ChangeMovingDirection);
-        input.SubscribeToInputAction(input.DashAction, StartDash, null, null);
+        Input.SubscribeToInputAction(Input.MoveAction, null, ChangeMovingDirection, ChangeMovingDirection);
+        Input.SubscribeToInputAction(Input.DashAction, StartDash, null, null);
     }
 
     void FixedUpdate()
@@ -43,7 +44,7 @@ public class PlayerMovement : MonoBehaviour
     private void ChangeMovingDirection()
     {
         if(currentInput.sqrMagnitude > 0.01f) lastInput = currentInput.normalized; 
-        currentInput = input.MoveAction.ReadValue<Vector2>().normalized;
+        currentInput = Input.MoveAction.ReadValue<Vector2>().normalized;
     }
 
     #endregion

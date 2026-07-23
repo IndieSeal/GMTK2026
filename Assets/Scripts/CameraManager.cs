@@ -3,6 +3,8 @@ using UnityEngine;
 //Thanks unity forums: https://discussions.unity.com/t/move-camera-towards-mouse-in-2d/836269/7
 public class CameraManager : MonoBehaviour
 {
+    public KidInput Input => KidInput.Instance;
+    
     [Header("Target")]
     [SerializeField] private Transform follow;
 
@@ -15,12 +17,12 @@ public class CameraManager : MonoBehaviour
 
     void Start()
     {
-        KidInput.Instance.SubscribeToInputAction(KidInput.Instance.MoveAction, null, ChangeMovingDirection, ChangeMovingDirection);
+        Input.SubscribeToInputAction(Input.MoveAction, null, ChangeMovingDirection, ChangeMovingDirection);
     }
 
     private void ChangeMovingDirection()
     {
-        targetOffsetX = KidInput.Instance.MoveAction.ReadValue<Vector2>().x;
+        targetOffsetX = Input.MoveAction.ReadValue<Vector2>().x;
     }
 
     void Update()

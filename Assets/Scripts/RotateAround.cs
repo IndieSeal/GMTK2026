@@ -3,6 +3,7 @@ using UnityEngine;
 public class RotateAround : MonoBehaviour
 {
     [SerializeField] private float radius = 1;
+    [SerializeField] private Vector2 offset = Vector2.up;
 
     void Update()
     {
@@ -12,7 +13,7 @@ public class RotateAround : MonoBehaviour
         if (direction.sqrMagnitude > 0.01f)
         {
             direction.Normalize();
-            transform.localPosition = direction * radius;
+            transform.localPosition = offset + (direction * radius);
         }
     }
 }
