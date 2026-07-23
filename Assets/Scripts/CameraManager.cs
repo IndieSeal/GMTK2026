@@ -7,6 +7,7 @@ public class CameraManager : MonoBehaviour
     
     [Header("Target")]
     [SerializeField] private Transform follow;
+    private Transform oldFollow;
 
     [Header("Movement")]
     [SerializeField] private float sensitivity = 0.15f;
@@ -14,6 +15,19 @@ public class CameraManager : MonoBehaviour
     private Vector2 targetPosition = Vector2.zero;
     private Vector3 cameraOffset = Vector2.zero;
     private float targetOffsetX = 0f;
+    private bool useOffset = true;
+
+    void OnEnable()
+    {
+        HidingSpot.OnPlayerHid += PlayerHidInSpot;
+        HidingSpot.OnPlayerExit += PlayerExitSpot;
+    }
+
+    void OnDisable()
+    {
+        HidingSpot.OnPlayerHid -= PlayerHidInSpot;
+        HidingSpot.OnPlayerExit -= PlayerExitSpot;
+    }
 
     void Start()
     {
@@ -30,12 +44,27 @@ public class CameraManager : MonoBehaviour
         HandleCameraMovement();
     }
 
+    private void PlayerHidInSpot(HidingSpot hidingSpot)
+    {
+        useOffset = false;
+        oldFollow = follow;
+        follow = hidingSpot.transform;
+    }
+
+    private void PlayerExitSpot(HidingSpot hidingSpot)
+    {
+        follow = oldFollow;
+        useOffset = true;
+    }
+
     private void HandleCameraMovement()
     {
         Rect screenRect = new Rect(0f, 0f, Screen.width, Screen.height);
-        cameraOffset.x = Mathf.MoveTowards (cameraOffset.x, targetOffsetX, offsetMoveSpeed * Time.fixedDeltaTime);
+        cameraOffset.x = Mathf.MoveTowards(cameraOffset.x, targetOffsetX, offsetMoveSpeed * Time.fixedDeltaTime);
 
         if(screenRect.Contains(Utilities.GetMousePosition())) targetPosition = Utilities.Get2DMouseWorldPosition() + (Vector2)cameraOffset;
+
+        if(!useOffset) targetPosition = follow.position;
         SetPosition(Vector2.Lerp(follow.position, targetPosition, sensitivity));
     }
 

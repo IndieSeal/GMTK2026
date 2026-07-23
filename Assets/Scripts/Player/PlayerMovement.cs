@@ -23,9 +23,25 @@ public class PlayerMovement : MonoBehaviour
     [Header("Dashing")]
     [SerializeField] private float dashVelocity = 5;
     [SerializeField] private float dashDuration = 1;
+    [SerializeField] private float dashDelay = 1.3f;
     private Vector2 dashingDirection;
     private bool isDashing;
+    private bool dashRecharging;
     private Coroutine dashCoroutine;
+
+    private PlayerState playerState = PlayerState.Normal;
+
+    void OnEnable()
+    {
+        HidingSpot.OnPlayerHid += OnPlayerHide;
+        HidingSpot.OnPlayerExit += OnPlayerExitHiding;
+    }
+
+    void OnDisable()
+    {
+        HidingSpot.OnPlayerHid -= OnPlayerHide;
+        HidingSpot.OnPlayerExit -= OnPlayerExitHiding;
+    }
 
     void Start()
     {
@@ -35,6 +51,8 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        if(playerState != PlayerState.Normal) return;
+        
         HandleMove();
         HandleDash();
     }
@@ -61,6 +79,8 @@ public class PlayerMovement : MonoBehaviour
     #endregion
     #region Dashing
 
+    private bool CanDash() => !isDashing && !dashRecharging && playerState == PlayerState.Normal;
+
     private void HandleDash()
     {
         if(!isDashing) return;
@@ -70,10 +90,19 @@ public class PlayerMovement : MonoBehaviour
 
     private void StartDash()
     {
-        if(isDashing) return;
+        if(!CanDash()) return;
 
         dashingDirection = (currentInput.sqrMagnitude > 0.01f) ? currentInput : lastInput;
         dashCoroutine = StartCoroutine(DashCoroutine());
+
+        StartCoroutine(DashDelayCoroutine());
+    }
+
+    private IEnumerator DashDelayCoroutine()
+    {
+        dashRecharging = true;
+        yield return new WaitForSeconds(dashDelay);
+        dashRecharging = false;
     }
 
     private IEnumerator DashCoroutine()
@@ -97,5 +126,23 @@ public class PlayerMovement : MonoBehaviour
 
     #endregion
 
-    //Make it so it stops dash if you hit a wall, also make it so when it STAYS, as if you dash when you're infront of a wall, nothing happens
+    private void OnPlayerHide(HidingSpot spot)
+    {
+        StopDash();
+        playerState = PlayerState.Hiding;
+
+        animator.SetBool("IsHiding", true);
+    }
+
+    private void OnPlayerExitHiding(HidingSpot spot)
+    {
+        playerState = PlayerState.Normal;
+
+        animator.SetBool("IsHiding", false);
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Walls")) StopDash();
+    }
 }
