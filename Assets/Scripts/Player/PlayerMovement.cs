@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     
     [Header("Components")]
     [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private Animator animator;
 
     [Header("Moving")]
     [SerializeField] private float movingSpeed = 5;
@@ -51,6 +52,10 @@ public class PlayerMovement : MonoBehaviour
     {
         if(currentInput.sqrMagnitude > 0.01f) lastInput = currentInput.normalized; 
         currentInput = Input.MoveAction.ReadValue<Vector2>().normalized;
+
+        animator.SetFloat("MovX", currentInput.x);
+        animator.SetFloat("MovY", currentInput.y);
+        animator.SetBool("IsMoving", currentInput.sqrMagnitude > 0.01f);
     }
 
     #endregion

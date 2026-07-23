@@ -2,15 +2,11 @@ using System.Collections;
 using UnityEngine;
 using uPools;
 
-public class Projectile : MonoBehaviour
+public class Projectile : MonoBehaviour, IPoolCallbackReceiver
 {
     [SerializeField] private int damage = 1;
     [SerializeField] private float projectileDuration = 3;
-
-    void Awake()
-    {
-        StartCoroutine(ReturnToPoolCoroutine());
-    }
+    private bool hasReturnedToPool;
 
     void OnCollisionEnter2D(Collision2D collision)
     {
@@ -43,8 +39,11 @@ public class Projectile : MonoBehaviour
 
     private void ReturnToPool()
     {
+        if(hasReturnedToPool) return;
+        
         StopAllCoroutines();
         SharedGameObjectPool.Return(gameObject);
+        hasReturnedToPool = true;
     }
 
     private IEnumerator ReturnToPoolCoroutine()
@@ -52,4 +51,12 @@ public class Projectile : MonoBehaviour
         yield return new WaitForSeconds(projectileDuration);
         SharedGameObjectPool.Return(gameObject);
     }
+
+    public void OnRent()
+    {
+        StartCoroutine(ReturnToPoolCoroutine());
+        hasReturnedToPool = false;
+    }
+
+    public void OnReturn(){}
 }
