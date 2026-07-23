@@ -70,23 +70,18 @@ public class Candle : MonoBehaviour
     [Header("Bullets")]
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField]private float bulletVelocity = 5;
-    [SerializeField] private float bulletDuration = 4;
     [Space]
     [SerializeField] private Transform centerTransform;
 
     private void HandleShooting()
     {
         if(reloadCoroutine != null || !CanShoot) return;
-        if(BulletCount <= 0)
-        {
-            StartReload();
-            return;
-        }
         
         GameObject instance = SharedGameObjectPool.Rent(bulletPrefab, centerTransform.position, Quaternion.identity);
-        StartCoroutine(HandleBullet(instance));
+        StartCoroutine(HandleShotDelay());
         
         BulletCount--;
+        if(BulletCount <= 0) StartReload();
         
         if(instance.TryGetComponent(out Rigidbody2D rb)){
             rb.linearVelocity = (Utilities.Get2DMouseWorldPosition() - (Vector2)centerTransform.position).normalized * bulletVelocity;
@@ -108,14 +103,11 @@ public class Candle : MonoBehaviour
         reloadCoroutine = null;
     }
 
-    private IEnumerator HandleBullet(GameObject instance)
+    private IEnumerator HandleShotDelay()
     {
         CanShoot = false;
         yield return new WaitForSeconds(shotDelay);
         CanShoot = true;
-        
-        yield return new WaitForSeconds(bulletDuration - shotDelay);
-        SharedGameObjectPool.Return(instance);
     }
 
     #endregion
