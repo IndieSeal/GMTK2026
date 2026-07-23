@@ -9,7 +9,7 @@ public class Projectile : MonoBehaviour
 
     void Awake()
     {
-        StartCoroutine(ReturnToPool());
+        StartCoroutine(ReturnToPoolCoroutine());
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -24,15 +24,30 @@ public class Projectile : MonoBehaviour
 
     private void BulletBehaviour(GameObject collision)
     {
-        if(!collision.TryGetComponent(out HealthSystem healthSystem)) return;
+        if(DetectWall(collision) || !collision.TryGetComponent(out HitReceiver hitReceiver)) return;
 
-        healthSystem.Damage(damage);
+        hitReceiver.HealthSystem.Damage(damage);
+        ReturnToPool();
+    }
 
+    private bool DetectWall(GameObject collision)
+    {
+        if (collision.layer == LayerMask.NameToLayer("Walls"))
+        {
+            ReturnToPool();
+            return true;        
+        }
+        
+        return false;
+    }
+
+    private void ReturnToPool()
+    {
         StopAllCoroutines();
         SharedGameObjectPool.Return(gameObject);
     }
 
-    private IEnumerator ReturnToPool()
+    private IEnumerator ReturnToPoolCoroutine()
     {
         yield return new WaitForSeconds(projectileDuration);
         SharedGameObjectPool.Return(gameObject);

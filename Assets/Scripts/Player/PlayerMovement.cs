@@ -3,6 +3,12 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    enum PlayerState
+    {
+        Normal,
+        Hiding
+    }
+    
     public KidInput Input => KidInput.Instance;
     
     [Header("Components")]
@@ -20,7 +26,7 @@ public class PlayerMovement : MonoBehaviour
     private bool isDashing;
     private Coroutine dashCoroutine;
 
-    void OnEnable()
+    void Start()
     {
         Input.SubscribeToInputAction(Input.MoveAction, null, ChangeMovingDirection, ChangeMovingDirection);
         Input.SubscribeToInputAction(Input.DashAction, StartDash, null, null);

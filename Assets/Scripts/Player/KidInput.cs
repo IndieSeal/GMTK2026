@@ -7,11 +7,14 @@ using static UnityEngine.InputSystem.InputAction;
 public class KidInput : Singleton<KidInput>
 {
     public const string MOVE_ACTION_NAME = "Move";
+    public const string INTERACT_ACTION_NAME = "Interact";
     public const string FIRE_ACTION_NAME = "Fire";
     public const string DASH_ACTION_NAME = "Dash";
     
     [SerializeField] private PlayerInput playerInput;
     public InputAction MoveAction { get; private set; }
+    public InputAction InteractAction { get; private set; }
+
     public InputAction FireAction { get; private set; }
     public InputAction DashAction { get; private set; }
 
@@ -24,6 +27,7 @@ public class KidInput : Singleton<KidInput>
         base.Awake();
         
         MoveAction = playerInput.actions.FindAction(MOVE_ACTION_NAME);
+        InteractAction = playerInput.actions.FindAction(INTERACT_ACTION_NAME);
         FireAction = playerInput.actions.FindAction(FIRE_ACTION_NAME);
         DashAction = playerInput.actions.FindAction(DASH_ACTION_NAME);
     }
@@ -31,6 +35,7 @@ public class KidInput : Singleton<KidInput>
     void OnEnable()
     {
         SetupAction(MoveAction);
+        SetupAction(InteractAction);
         SetupAction(FireAction);
         SetupAction(DashAction);
     }
@@ -38,6 +43,7 @@ public class KidInput : Singleton<KidInput>
     void OnDisable()
     {
         UnsetupAction(MoveAction);
+        UnsetupAction(InteractAction);
         UnsetupAction(FireAction);
         UnsetupAction(DashAction);
     }
