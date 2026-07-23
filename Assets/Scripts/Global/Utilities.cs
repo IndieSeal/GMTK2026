@@ -6,6 +6,29 @@ using UnityEngine.InputSystem;
 
 public static class Utilities
 {
+    public static Quaternion LookAt2D(this Transform user, Vector3 target, float offset = 0, float minAngle = 0, float maxAngle = 360) => LookAt2D(user.position, target, minAngle, maxAngle, offset);
+    public static Quaternion LookAt2D(Vector2 user, Vector2 target, float minAngle, float maxAngle, float offset = 0)
+    {
+        float angle = LookAt2DAngle(user, target, offset);
+        
+        float clampedAngle = Mathf.Clamp(angle, minAngle, maxAngle);
+        Quaternion rotation = Quaternion.Euler(0, 0, clampedAngle);
+        return rotation;
+    }
+
+    public static Quaternion LookAt2D(Vector2 user, Vector2 target, float offset = 0)
+    {
+        float angle = LookAt2DAngle(user, target, offset);
+        Quaternion rotation = Quaternion.Euler(0, 0, angle);
+        return rotation;
+    }
+
+    public static float LookAt2DAngle(Vector2 user, Vector2 target, float offset = 0)
+    {
+        Vector2 direction2D = target - user;
+        return offset + (Mathf.Atan2(direction2D.y, direction2D.x) * Mathf.Rad2Deg);
+    }
+    
     public static Vector3 GetScreenToWorldPoint(Vector3 position) => Camera.main.ScreenToWorldPoint(position);
     public static Vector2 Get2DScreenToWorldPoint(Vector2 position) => GetScreenToWorldPoint(position);
 
