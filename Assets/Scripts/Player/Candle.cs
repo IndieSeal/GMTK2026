@@ -21,6 +21,32 @@ public class Candle : MonoBehaviour
 
         candleTimer = maxCandleDuration;
         BulletCount = maxBulletCount;
+
+        maxCandleLightIntensity = candleLight.intensity;
+        maxCandleLightOuter = candleLight.pointLightOuterRadius;
+    }
+
+    void OnEnable()
+    {
+        HidingSpot.OnPlayerHid += PlayerHidInSpot;
+        HidingSpot.OnPlayerExit += PlayerExitSpot;
+    }
+
+    void OnDisable()
+    {
+        HidingSpot.OnPlayerHid -= PlayerHidInSpot;
+        HidingSpot.OnPlayerExit -= PlayerExitSpot;
+    }
+
+    private void PlayerHidInSpot(HidingSpot hidingSpot)
+    {
+        if(shotDelayCoroutine != null) StopCoroutine(shotDelayCoroutine);
+        CanShoot = false;
+    }
+
+    private void PlayerExitSpot(HidingSpot hidingSpot)
+    {
+        CanShoot = true;
     }
 
     void Start()
@@ -66,6 +92,7 @@ public class Candle : MonoBehaviour
     [Header("Reloading")]
     [SerializeField] private float reloadTime = 1.6f;
     private Coroutine reloadCoroutine;
+    private Coroutine shotDelayCoroutine;
     public bool IsReloading => reloadCoroutine != null;
 
     [Header("Bullets")]
@@ -79,7 +106,7 @@ public class Candle : MonoBehaviour
         if(reloadCoroutine != null || !CanShoot) return;
         
         GameObject instance = SharedGameObjectPool.Rent(bulletPrefab, centerTransform.position, Quaternion.identity);
-        StartCoroutine(HandleShotDelay());
+        shotDelayCoroutine = StartCoroutine(HandleShotDelay());
         
         BulletCount--;
         if(BulletCount <= 0) StartReload();
@@ -119,6 +146,8 @@ public class Candle : MonoBehaviour
     [SerializeField] private Light2D globalLight;
     [SerializeField] private Light2D candleLight;
     [SerializeField] private Volume volume;
+    private float maxCandleLightIntensity = 1;
+    private float maxCandleLightOuter;
     private Color baseGlobalLightColor;
     private Color lerpedGlobalLightColor;
 
@@ -139,7 +168,8 @@ public class Candle : MonoBehaviour
 
     private void HandleCandleLight()
     {
-        candleLight.intensity = Mathf.Lerp(1, 0, GetCandleValue());
+        candleLight.intensity = Mathf.Lerp(maxCandleLightIntensity, 0, GetCandleValue());
+        candleLight.pointLightOuterRadius = Mathf.Lerp(maxCandleLightOuter, 0, GetCandleValue());
     }
 
     private void HandleVignette()

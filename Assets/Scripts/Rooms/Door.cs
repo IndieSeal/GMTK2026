@@ -1,5 +1,6 @@
 using System;
 using FMODUnity;
+using TMPro;
 using UnityEngine;
 
 public class Door : MonoBehaviour
@@ -13,18 +14,31 @@ public class Door : MonoBehaviour
     [SerializeField] private HitReceiver crossDoorCollider;
     private bool isClosed = true;
 
+    [SerializeField] private TMP_Text interactPrompt;
+
     [Header("Audio")]
     [SerializeField] private EventReference OpenEvent;
     [SerializeField] private EventReference CloseEvent;
 
+    void Awake()
+    {
+        HidePrompt();
+    }
+
     void OnEnable()
     {
+        openCollider.OnEnter += ShowPrompt;
+        openCollider.OnExit += HidePrompt;
+        
         openCollider.OnInteract += InteractWithDoor;
         crossDoorCollider.OnAnyHit += Crossed;
     }
 
     void OnDisable()
     {
+        openCollider.OnEnter -= ShowPrompt;
+        openCollider.OnExit -= HidePrompt;
+
         openCollider.OnInteract -= InteractWithDoor;
         crossDoorCollider.OnAnyHit -= Crossed;
     }
@@ -33,6 +47,19 @@ public class Door : MonoBehaviour
     {
         if(isClosed) Open();
         else Close();
+    }
+
+    private void ShowPrompt()
+    {
+        string prompt = isClosed ? "open" : "close";
+
+        interactPrompt.gameObject.SetActive(true);
+        interactPrompt.text = $"(E) to {prompt}";
+    }
+
+    private void HidePrompt()
+    {
+        interactPrompt.gameObject.SetActive(false);
     }
 
     public void Open(bool forced = false)
@@ -44,6 +71,7 @@ public class Door : MonoBehaviour
 
         RuntimeManager.PlayOneShot(OpenEvent, transform.position);
         
+        ShowPrompt();
         OnOpen?.Invoke();
     }
 
@@ -56,15 +84,23 @@ public class Door : MonoBehaviour
     }
 
     public void Close(bool forced = false)
-    {
+    {        
         doorCollider.enabled = true;
+        bool wasPreviouslyClosed = isClosed;
         isClosed = true;
 
-        if(forced) openCollider.gameObject.SetActive(false);
+        if(forced)
+        {
+            openCollider.gameObject.SetActive(false);
+            HidePrompt();
+        }
+        else ShowPrompt();
+
+        OnClose?.Invoke();
+
+        if(wasPreviouslyClosed) return;
 
         RuntimeManager.PlayOneShot(CloseEvent, transform.position);
-        
-        OnClose?.Invoke();
     }
 
     public void RemoveForcedDoor()
