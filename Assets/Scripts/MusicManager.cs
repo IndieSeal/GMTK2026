@@ -15,11 +15,10 @@ public class MusicManager : MonoBehaviour
     {
 
         float candleValue = candle.GetCandleValue();
-        int stressLevel = 0;
+        int stressLevel = 1;
 
         if(candleValue < 0.9f) stressLevel = Mathf.CeilToInt(candle.GetCandleValue() * 3);
         else stressLevel = 4;
-        Debug.Log(stressLevel);
 
         RuntimeManager.StudioSystem.setParameterByName("Stress", stressLevel);
     }

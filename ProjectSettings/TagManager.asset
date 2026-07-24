@@ -47,6 +47,9 @@ TagManager:
   - name: Player
     uniqueID: 1045658139
     locked: 0
+  - name: Dialogue
+    uniqueID: 990761207
+    locked: 0
   m_RenderingLayers:
   - Default
   m_MigratedRenderPipelines: []

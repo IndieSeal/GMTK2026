@@ -1,9 +1,15 @@
 ﻿<Solution>
+  <Project Path="Febucci.TextAnimator.Runtime.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="Febucci.TextAnimator.Editor.csproj" />
+  <Project Path="Febucci.Attributes.Editor.csproj" />
   <Project Path="AllIn1SpriteShaderAssembly.csproj" />
   <Project Path="FMODUnityResonanceEditor.csproj" />
   <Project Path="FMODUnityEditor.csproj" />
   <Project Path="FMODUnity.csproj" />
   <Project Path="FMODUnityHaptics.csproj" />
+  <Project Path="Febucci.TextAnimator.TMP.Runtime.csproj" />
   <Project Path="FMODUnityResonance.csproj" />
+  <Project Path="Febucci.TextAnimator.Demo.Runtime.csproj" />
+  <Project Path="Febucci.Attributes.Runtime.csproj" />
 </Solution>

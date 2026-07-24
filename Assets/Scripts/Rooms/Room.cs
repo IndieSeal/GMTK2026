@@ -7,7 +7,7 @@ public class Room : MonoBehaviour
 
     // Got to make it so it's waves instead of all enemies at once without waves
     [SerializeField] private List<EnemyBase> enemies = new List<EnemyBase>();
-    private bool hasRoomBeenCleared = false;
+    public bool HasRoomBeenCleared { get; private set; }= false;
     private bool hasRoomBeenEntered = false;
     private int enemiesKilled;
 
@@ -41,9 +41,7 @@ public class Room : MonoBehaviour
 
     private void OnRoomCleared()
     {
-        Debug.Log("Cleared");
-
-        hasRoomBeenCleared = true;
+        HasRoomBeenCleared = true;
         foreach(Door door in doors) door.RemoveForcedDoor();
     }
 }
