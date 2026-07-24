@@ -19,6 +19,8 @@ public class HidingSpot : MonoBehaviour, IInteractable
         {
             playerTransform = FindAnyObjectByType<PlayerMovement>().transform;
             lastPosition = playerTransform.position;
+            
+            playerTransform.position = hidingTransform.position;
 
             OnPlayerHid?.Invoke(this);
         }

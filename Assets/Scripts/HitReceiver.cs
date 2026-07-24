@@ -6,9 +6,6 @@ public class HitReceiver : MonoBehaviour
     public event Action<GameObject> OnCollisionHit;
     public event Action<GameObject> OnTriggerHit;
     public event Action<GameObject> OnAnyHit;
-
-    [SerializeField] private HealthSystem healthSystem;
-    public HealthSystem HealthSystem => healthSystem;
     
     void OnCollisionEnter2D(Collision2D collision)
     {

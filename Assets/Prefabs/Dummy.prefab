@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4422000238558756352}
   - component: {fileID: 8660618405218539664}
   - component: {fileID: 7849409132950651141}
-  - component: {fileID: 7839812443689859690}
+  - component: {fileID: 6970166416477066793}
   - component: {fileID: 6133043278287911000}
   m_Layer: 6
   m_Name: Dummy
@@ -48,6 +48,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8e4b4f67b1641bdd9be3e8c9872f44b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Dummy
+  health: {fileID: 7849409132950651141}
+  hitReceiver: {fileID: 6970166416477066793}
   healthSystem: {fileID: 7849409132950651141}
 --- !u!114 &7849409132950651141
 MonoBehaviour:
@@ -62,7 +64,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthSystem
   maxHealth: 3
---- !u!114 &7839812443689859690
+--- !u!114 &6970166416477066793
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -71,9 +73,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 433082267112030532}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f402e2facbb431c5d89d7482795461a3, type: 3}
+  m_Script: {fileID: 11500000, guid: 9a344c5eee8686061ac60206d80ef5a1, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HitReceiver
+  m_EditorClassIdentifier: Assembly-CSharp::Hitbox
   healthSystem: {fileID: 7849409132950651141}
 --- !u!61 &6133043278287911000
 BoxCollider2D:

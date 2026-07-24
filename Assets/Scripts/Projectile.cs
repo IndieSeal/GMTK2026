@@ -20,9 +20,9 @@ public class Projectile : MonoBehaviour, IPoolCallbackReceiver
 
     private void BulletBehaviour(GameObject collision)
     {
-        if(DetectWall(collision) || !collision.TryGetComponent(out HitReceiver hitReceiver)) return;
+        if(DetectWall(collision) || !collision.TryGetComponent(out Hitbox hitbox)) return;
 
-        hitReceiver.HealthSystem.Damage(damage);
+        hitbox.HealthSystem.Damage(damage);
         ReturnToPool();
     }
 
