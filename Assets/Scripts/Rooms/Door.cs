@@ -9,10 +9,14 @@ public class Door : MonoBehaviour
     public event Action OnCrossed;
     public event Action OnClose;
 
+    [SerializeField] private Door linkedDoor; 
     [SerializeField] private InteractableReceiver openCollider;
     [SerializeField] private Collider2D doorCollider;
     [SerializeField] private HitReceiver crossDoorCollider;
-    private bool isClosed = true;
+    public bool IsClosed { get; set; } = true;
+
+    [SerializeField] private Transform startPosition;
+    public Transform tpTransform => startPosition.transform;
 
     [SerializeField] private TMP_Text interactPrompt;
 
@@ -29,7 +33,7 @@ public class Door : MonoBehaviour
     {
         openCollider.OnEnter += ShowPrompt;
         openCollider.OnExit += HidePrompt;
-        
+
         openCollider.OnInteract += InteractWithDoor;
         crossDoorCollider.OnAnyHit += Crossed;
     }
@@ -43,15 +47,23 @@ public class Door : MonoBehaviour
         crossDoorCollider.OnAnyHit -= Crossed;
     }
 
+    private void MoveTowardsDoor(GameObject go)
+    {
+        if(!go.TryGetComponent(out PlayerMovement player) || IsClosed) return;
+
+        linkedDoor.IsClosed = IsClosed;
+        player.transform.position = linkedDoor.tpTransform.position;
+    }
+
     private void InteractWithDoor()
     {
-        if(isClosed) Open();
+        if(IsClosed) Open();
         else Close();
     }
 
     private void ShowPrompt()
     {
-        string prompt = isClosed ? "open" : "close";
+        string prompt = IsClosed ? "open" : "close";
 
         interactPrompt.gameObject.SetActive(true);
         interactPrompt.text = $"(E) to {prompt}";
@@ -64,8 +76,8 @@ public class Door : MonoBehaviour
 
     public void Open(bool forced = false)
     {
-        doorCollider.enabled = false;
-        isClosed = false;
+        //doorCollider.enabled = false;
+        IsClosed = false;
 
         if(forced) openCollider.gameObject.SetActive(true);
 
@@ -85,9 +97,9 @@ public class Door : MonoBehaviour
 
     public void Close(bool forced = false)
     {        
-        doorCollider.enabled = true;
-        bool wasPreviouslyClosed = isClosed;
-        isClosed = true;
+        //doorCollider.enabled = true;
+        bool wasPreviouslyClosed = IsClosed;
+        IsClosed = true;
 
         if(forced)
         {
@@ -106,5 +118,10 @@ public class Door : MonoBehaviour
     public void RemoveForcedDoor()
     {
         openCollider.gameObject.SetActive(true);
+    }
+
+    void OnCollisionStay2D(Collision2D collision)
+    {
+        MoveTowardsDoor(collision.gameObject);
     }
 }
