@@ -35,9 +35,8 @@ public class Room : MonoBehaviour
         if (hasRoomBeenEntered) return;
         hasRoomBeenEntered = true;
 
-        foreach(Door door in doors) door.Close(false);
+        foreach(Door door in doors) door.Close(true);
         foreach(EnemyBase enemy in enemies) enemy.OnStartBehaviour();
-        //Activate enemies, they should still be there, but with their behaviour inactive (including hit detection)
     }
 
     private void OnRoomCleared()
@@ -45,6 +44,6 @@ public class Room : MonoBehaviour
         Debug.Log("Cleared");
 
         hasRoomBeenCleared = true;
-        foreach(Door door in doors) door.Open();
+        foreach(Door door in doors) door.RemoveForcedDoor();
     }
 }

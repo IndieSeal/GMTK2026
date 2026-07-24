@@ -49,8 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Dummy
   health: {fileID: 7849409132950651141}
-  hitReceiver: {fileID: 6970166416477066793}
-  healthSystem: {fileID: 7849409132950651141}
+  hitbox: {fileID: 6970166416477066793}
 --- !u!114 &7849409132950651141
 MonoBehaviour:
   m_ObjectHideFlags: 0

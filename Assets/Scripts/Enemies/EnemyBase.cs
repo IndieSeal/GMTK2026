@@ -7,7 +7,12 @@ public abstract class EnemyBase : MonoBehaviour
     
     [Header("Enemy Base")]
     [SerializeField] private HealthSystem health;
-    [SerializeField] private Hitbox hitReceiver;
+    [SerializeField] private Hitbox hitbox;
+
+    void Awake()
+    {
+        OnStopBehaviour();
+    }
 
     void OnEnable()
     {
@@ -21,16 +26,14 @@ public abstract class EnemyBase : MonoBehaviour
 
     public virtual void OnStartBehaviour()
     {
-        hitReceiver.enabled = true;
+        hitbox.enabled = true;
 
         gameObject.SetActive(true);
     }
 
     public virtual void OnStopBehaviour()
     {
-        hitReceiver.enabled = false;
-
-        gameObject.SetActive(false);
+        hitbox.enabled = false;
     }
 
     public virtual void OnEnemyKilled()
@@ -38,5 +41,6 @@ public abstract class EnemyBase : MonoBehaviour
         OnKilled?.Invoke(this);
 
         OnStopBehaviour();
+        gameObject.SetActive(false);
     }
 }

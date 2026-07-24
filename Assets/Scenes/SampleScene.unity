@@ -1801,7 +1801,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 1.5}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1811,7 +1811,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 2, y: 1}
+  m_Size: {x: 2, y: 3.5}
   m_EdgeRadius: 0
 --- !u!114 &596712349
 MonoBehaviour:
@@ -1822,9 +1822,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 596712346}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f402e2facbb431c5d89d7482795461a3, type: 3}
+  m_Script: {fileID: 11500000, guid: 2db741f36167bd9aeab1720512c97b4b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HitReceiver
+  m_EditorClassIdentifier: Assembly-CSharp::InteractableReceiver
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -3496,6 +3496,20 @@ MonoBehaviour:
   openCollider: {fileID: 596712349}
   doorCollider: {fileID: 1097449197}
   crossDoorCollider: {fileID: 246657156}
+  OpenEvent:
+    Guid:
+      Data1: -557226653
+      Data2: 1193102182
+      Data3: -849266289
+      Data4: 73312291
+    Path: event:/SFX/Door Open
+  CloseEvent:
+    Guid:
+      Data1: -230149524
+      Data2: 1084809750
+      Data3: 1074957714
+      Data4: -1686114731
+    Path: event:/SFX/Door Close
 --- !u!1 &1102550383
 GameObject:
   m_ObjectHideFlags: 0
