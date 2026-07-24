@@ -44,7 +44,7 @@ public class Candle : MonoBehaviour
     public float CandleWasteMultiplier { get; set; } = 1;
     private float candleTimer;
 
-    private float GetCandleValue() => Mathf.Lerp(1, 0, candleTimer / maxCandleDuration);
+    public float GetCandleValue() => Mathf.Lerp(1, 0, candleTimer / maxCandleDuration);
 
     public void AddCandleDuration(float value)
     {
