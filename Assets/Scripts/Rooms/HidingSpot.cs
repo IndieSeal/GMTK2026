@@ -1,4 +1,5 @@
 using System;
+using FMODUnity;
 using TMPro;
 using UnityEngine;
 
@@ -11,6 +12,10 @@ public class HidingSpot : MonoBehaviour, IInteractable
     [SerializeField] private Transform hidingTransform;
     private Transform playerTransform;
     private Vector3 lastPosition;
+
+    [Header("Audio")]
+    [SerializeField] private EventReference EnterEvent;
+    [SerializeField] private EventReference ExitEvent;
     
     public void OnEnterRange()
     {
@@ -33,6 +38,9 @@ public class HidingSpot : MonoBehaviour, IInteractable
     {
         if(playerTransform == null)
         {
+            //Enter
+            RuntimeManager.PlayOneShot(EnterEvent);
+            
             playerTransform = FindAnyObjectByType<PlayerMovement>().transform;
             lastPosition = playerTransform.position;
             
@@ -43,6 +51,9 @@ public class HidingSpot : MonoBehaviour, IInteractable
         }
         else
         {
+            //Exit
+            RuntimeManager.PlayOneShot(ExitEvent);
+
             playerTransform.position = lastPosition;
             playerTransform = null;
             

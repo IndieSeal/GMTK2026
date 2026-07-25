@@ -350,8 +350,8 @@ MeshRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 990761207
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
@@ -513,14 +513,21 @@ MonoBehaviour:
       Data2: 1193102182
       Data3: -849266289
       Data4: 73312291
-    Path: event:/SFX/Door Open
+    Path: event:/Non SFX/Door Open
   CloseEvent:
     Guid:
       Data1: -230149524
       Data2: 1084809750
       Data3: 1074957714
       Data4: -1686114731
-    Path: event:/SFX/Door Close
+    Path: event:/Non SFX/Door Close
+  footstepEvent:
+    Guid:
+      Data1: -157213899
+      Data2: 1337558377
+      Data3: 380401071
+      Data4: 2072074523
+    Path: event:/Non SFX/Footsteps
 --- !u!61 &7097412682237202184
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -555,7 +562,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: -0.75}
+  m_Offset: {x: 0, y: -0.8}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -565,7 +572,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 2, y: 1.5}
+  m_Size: {x: 2, y: 1.6}
   m_EdgeRadius: 0
 --- !u!1 &8965271437090112320
 GameObject:

@@ -15,6 +15,7 @@ public class Tutorial1 : MonoBehaviour
     [Space]
     [SerializeField] private string dialogue1 = "Hey, welcome to the mansion! I haven't seen a human here in a while.";
     [SerializeField] private string dialogue2 = "Looks like the monster won't let you out, let's defeat them ig yuppee";
+    [SerializeField] private string dialogue3;
     private bool hasEnteredPhase1;
 
     void Awake()
@@ -25,11 +26,15 @@ public class Tutorial1 : MonoBehaviour
     void OnEnable()
     {
         phase1Collider.OnAnyHit += EnterPhase1Area;
+
+        Door.OnRoomChanged += CancelDialogue;
     }
 
     void OnDisable()
     {
         phase1Collider.OnAnyHit -= EnterPhase1Area;
+
+        Door.OnRoomChanged -= CancelDialogue;
     }
 
     void Update()
@@ -48,8 +53,17 @@ public class Tutorial1 : MonoBehaviour
     private IEnumerator EnterPhase1Coroutine()
     {
         yield return WaitForDialogue(dialogue1);
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.2f);
         yield return WaitForDialogue(dialogue2);
+        yield return new WaitForSeconds(0.2f);
+        if(!string.IsNullOrEmpty(dialogue3)) yield return WaitForDialogue(dialogue3);
+    }
+
+    private void CancelDialogue()
+    {
+        StopAllCoroutines();
+        typewriter.SkipTypewriter();
+        EndDialogue();
     }
 
     #region General
@@ -57,6 +71,8 @@ public class Tutorial1 : MonoBehaviour
     private bool waitForDialogue = false;
     private IEnumerator WaitForDialogue(string dialogue, float endDelay = 1)
     {
+        waitForDialogue = false;
+        
         dialogueParent.SetActive(true);
         
         typewriter.TextAnimator.textFull = $"<?start>{dialogue}";
@@ -64,12 +80,17 @@ public class Tutorial1 : MonoBehaviour
 
         while(!waitForDialogue) yield return null;
 
-        typewriter.onTextShowed.RemoveListener(OnDialogueComplete);
-        dialogueParent.SetActive(false);
-
-        waitForDialogue = false;
+        EndDialogue();
 
         yield return new WaitForSeconds(endDelay);
+    }
+
+    private void EndDialogue()
+    {
+        typewriter.onTextShowed.RemoveListener(OnDialogueComplete);
+        
+        dialogueParent.SetActive(false);
+        waitForDialogue = false;
     }
 
     private void OnDialogueComplete()

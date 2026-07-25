@@ -28,7 +28,6 @@ public class HealthSystem : MonoBehaviour
         CurrentHealth = Mathf.Clamp(CurrentHealth - amount, 0, maxHealth);
         OnCharacterDamaged?.Invoke();
         
-        Debug.Log(CurrentHealth);
         if(CurrentHealth <= 0) OnCharacterDeath?.Invoke();
     }
 }

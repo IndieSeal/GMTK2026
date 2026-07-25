@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class Door : MonoBehaviour
 {
+    public static event Action OnRoomChanged;
+
     public event Action OnOpen;
     public event Action OnCrossed;
     public event Action OnClose;
@@ -20,7 +22,6 @@ public class Door : MonoBehaviour
     public bool IsClosed { get => isClosed; set
         {
             isClosed = value;
-            Debug.Log(isClosed);
             animator.SetBool("IsClosed", IsClosed);
         }}
     private bool isClosed = true;
@@ -33,6 +34,7 @@ public class Door : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private EventReference OpenEvent;
     [SerializeField] private EventReference CloseEvent;
+    [SerializeField] private EventReference footstepEvent;
     private Coroutine fadeCoroutine;
 
     void Awake()
@@ -63,15 +65,20 @@ public class Door : MonoBehaviour
         if(!go.TryGetComponent(out PlayerMovement player) || IsClosed || fadeCoroutine != null) return;
 
         linkedDoor.IsClosed = IsClosed;
+        OnRoomChanged?.Invoke();
         fadeCoroutine = StartCoroutine(TransitionManager.Instance.FadeCoroutine(1, () => MoveTowardsDoorCoroutine(player), () => MoveTowardsDoorFinal(player)));
     }
 
     private void MoveTowardsDoorCoroutine(PlayerMovement player)
     {
+        RuntimeManager.PlayOneShot(footstepEvent);
         player.transform.position = linkedDoor.tpTransform.position;
     }
 
-    private void MoveTowardsDoorFinal(PlayerMovement player) => fadeCoroutine = null;
+    private void MoveTowardsDoorFinal(PlayerMovement player)
+    {
+        fadeCoroutine = null;
+    }
 
     private void InteractWithDoor()
     {

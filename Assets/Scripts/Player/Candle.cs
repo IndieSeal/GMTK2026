@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using FMODUnity;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -101,12 +102,17 @@ public class Candle : MonoBehaviour
     [Space]
     [SerializeField] private Transform centerTransform;
 
+    [Header("Audio")]
+    [SerializeField] private EventReference ShootEvent;
+
     private void HandleShooting()
     {
         if(reloadCoroutine != null || !CanShoot) return;
         
         GameObject instance = SharedGameObjectPool.Rent(bulletPrefab, centerTransform.position, Quaternion.identity);
         shotDelayCoroutine = StartCoroutine(HandleShotDelay());
+
+        RuntimeManager.PlayOneShot(ShootEvent);
         
         BulletCount--;
         if(BulletCount <= 0) StartReload();

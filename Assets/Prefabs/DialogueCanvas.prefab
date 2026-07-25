@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 6447232682652509820}
   - component: {fileID: 5413103618627247877}
   m_Layer: 0
-  m_Name: Image (1)
+  m_Name: Arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -247,7 +247,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 0.25
+  m_fontSize: 0.3
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -359,8 +359,8 @@ MonoBehaviour:
   onMessage:
     m_PersistentCalls:
       m_Calls: []
-  waitForNormalChars: 0.06
-  waitLong: 0.6
+  waitForNormalChars: 0.03
+  waitLong: 1.2
   waitMiddle: 0.2
   avoidMultiplePunctuationWait: 0
   waitForNewLines: 1
@@ -445,14 +445,14 @@ RectTransform:
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6761483335765564587}
   - {fileID: 6772276428570677014}
+  - {fileID: 6761483335765564587}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 1}
-  m_SizeDelta: {x: 2, y: 2}
+  m_AnchoredPosition: {x: 0, y: 1.25}
+  m_SizeDelta: {x: 3.5, y: 3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &2443439854996203717
 Canvas:

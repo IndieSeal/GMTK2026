@@ -50,6 +50,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HidingSpot
   interactPrompt: {fileID: 1862470668832290436}
   hidingTransform: {fileID: 3131798748021643538}
+  EnterEvent:
+    Guid:
+      Data1: 1199879063
+      Data2: 1196476768
+      Data3: -2147219048
+      Data4: 1545111432
+    Path: event:/Non SFX/Closet enter
+  ExitEvent:
+    Guid:
+      Data1: -2115680241
+      Data2: 1322344435
+      Data3: -884953211
+      Data4: -291734496
+    Path: event:/Non SFX/Closet exit
 --- !u!61 &67477603938069699
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -301,8 +315,8 @@ MeshRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 990761207
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
