@@ -63,8 +63,19 @@ public class PositionNode
 
 public class AStarPathfinder : MonoBehaviour
 {
+    public static AStarPathfinder instance = null;
     public Tilemap groundTilemap;
     public List<PositionNode> allPositions = new();
+
+    void Awake()
+    {
+        if(instance != null){
+            Debug.Log("Already made an A* Pathfinder!!");
+            Destroy(gameObject);
+        }
+
+        instance = this;
+    }
 
     void Start()
     {
