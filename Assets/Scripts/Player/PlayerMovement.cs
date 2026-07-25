@@ -31,6 +31,13 @@ public class PlayerMovement : MonoBehaviour
 
     public PlayerState playerState { get; private set; } = PlayerState.Normal;
 
+    public static PlayerMovement instance;
+
+    void Awake()
+    {
+        instance = this; // make an instance :D
+    }
+
     void OnEnable()
     {
         HidingSpot.OnPlayerHid += OnPlayerHide;
