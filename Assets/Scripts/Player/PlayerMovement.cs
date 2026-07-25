@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    enum PlayerState
+    public enum PlayerState
     {
         Normal,
         Hiding
@@ -29,7 +29,7 @@ public class PlayerMovement : MonoBehaviour
     private bool dashRecharging;
     private Coroutine dashCoroutine;
 
-    private PlayerState playerState = PlayerState.Normal;
+    public PlayerState playerState { get; private set; } = PlayerState.Normal;
 
     void OnEnable()
     {

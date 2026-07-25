@@ -16,6 +16,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 22100000, guid: 20706212d09fe28ef8b463d309bd8cd1, type: 2}
+    - target: {fileID: 3514860856987876506, guid: 1582eaa0100ead578a3651ffe2040e3a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3524009933997832840, guid: 1582eaa0100ead578a3651ffe2040e3a, type: 3}
       propertyPath: m_LocalPosition.y
       value: 1
@@ -31,6 +35,10 @@ PrefabInstance:
     - target: {fileID: 7097412682237202184, guid: 1582eaa0100ead578a3651ffe2040e3a, type: 3}
       propertyPath: m_Offset.y
       value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7343368971760104568, guid: 1582eaa0100ead578a3651ffe2040e3a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -2.74
       objectReference: {fileID: 0}
     - target: {fileID: 8280201480172484909, guid: 1582eaa0100ead578a3651ffe2040e3a, type: 3}
       propertyPath: m_LocalPosition.x
