@@ -68,14 +68,17 @@ public class AStarPathfinder : MonoBehaviour
                 (Vector2)(Vector3)sw, (Vector2)(Vector3)s, (Vector2)(Vector3)se
             );
             Debug.Log(allPositions.Contains(pNode));
+
+            // remove it type shit
+            toSearchTiles.RemoveAt(i);
+            i--; // preserve the index in our loop
+            
             if( allPositions.Contains(pNode) ){ continue; } // we already searched this point, move on
 
             TileBase tile = groundTilemap.GetTile(pos);
             if(tile == null){ continue; }
 
             allPositions.Add( pNode );
-            toSearchTiles.RemoveAt(i);
-            i--; // preserve the index in our loop
 
             // add adjacent items to search
             toSearchTiles.Add(nw);
