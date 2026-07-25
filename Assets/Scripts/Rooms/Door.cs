@@ -39,6 +39,7 @@ public class Door : MonoBehaviour
 
     void Awake()
     {
+        if(linkedDoor == null) openCollider.gameObject.SetActive(false);
         HidePrompt();
     }
 
@@ -58,11 +59,13 @@ public class Door : MonoBehaviour
 
         openCollider.OnInteract -= InteractWithDoor;
         crossDoorCollider.OnAnyHit -= Crossed;
+
+        interactPrompt.gameObject.SetActive(false);
     }
 
     private void MoveTowardsDoor(GameObject go)
     {
-        if(!go.TryGetComponent(out PlayerMovement player) || IsClosed || fadeCoroutine != null) return;
+        if(linkedDoor == null || !go.TryGetComponent(out PlayerMovement player) || IsClosed || fadeCoroutine != null) return;
 
         linkedDoor.IsClosed = IsClosed;
         OnRoomChanged?.Invoke();
