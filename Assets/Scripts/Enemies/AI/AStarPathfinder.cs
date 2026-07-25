@@ -90,7 +90,7 @@ public class AStarPathfinder : MonoBehaviour
         //Debug.DrawLine(Vector2.zero, Vector2.one*3, Color.green, 1f); // -0.5, -0.5 to 0.5, 0.5
     }
 
-    public void clearNodeScores()
+    void clearNodeScores()
     {
         for(int i=0; i<allPositions.Count; i++)
         {
@@ -166,7 +166,7 @@ public class AStarPathfinder : MonoBehaviour
         return null;
     }
 
-    PositionNode getNearestNodeFromPos(Vector2 target)
+    public PositionNode getNearestNodeFromPos(Vector2 target)
     {
         Vector3Int v3i = Vector3Int.FloorToInt((Vector3)target);
         floodSearchFindTiles(v3i);
