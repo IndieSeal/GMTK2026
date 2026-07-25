@@ -6,6 +6,8 @@ public class Monster : MonoBehaviour
     [SerializeField] private float minSpeed = 7;
     [SerializeField] private float maxSpeed = 10;
     [SerializeField] private float pauseDelay = 2;
+
+    [SerializeField] private float speedyDistance = 30;
     
     private PlayerMovement playerInstance;
     private Candle candleInstance;
@@ -40,7 +42,6 @@ public class Monster : MonoBehaviour
     {
         Move();
         
-        Debug.Log(isHiding);
         if(justDelay || isHiding || candleInstance.GetCandleValue() < 0.4f) return;
 
         targetPosition = playerInstance.transform.position;
@@ -51,6 +52,7 @@ public class Monster : MonoBehaviour
         float velocity = Mathf.InverseLerp(0.4f, 1, candleInstance.GetCandleValue());
         velocity = Mathf.Lerp(minSpeed, maxSpeed, velocity);
 
+        if(Vector2.Distance(transform.position, targetPosition) > speedyDistance) velocity = maxSpeed * 2;
         transform.position = Vector2.MoveTowards(transform.position, targetPosition, velocity * Time.deltaTime);
     }
 
