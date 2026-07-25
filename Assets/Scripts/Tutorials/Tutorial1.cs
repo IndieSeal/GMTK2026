@@ -39,7 +39,7 @@ public class Tutorial1 : MonoBehaviour
 
     void Update()
     {
-        candle.AddCandleDuration(3);
+        //candle.AddCandleDuration(3);
     }
 
     private void EnterPhase1Area(GameObject g)
