@@ -35,12 +35,18 @@ public class PlayerMovement : MonoBehaviour
     {
         HidingSpot.OnPlayerHid += OnPlayerHide;
         HidingSpot.OnPlayerExit += OnPlayerExitHiding;
+
+        TransitionManager.TransitionStarted += StopMovement;
+        TransitionManager.TransitionEnded += StartMovement;
     }
 
     void OnDisable()
     {
         HidingSpot.OnPlayerHid -= OnPlayerHide;
         HidingSpot.OnPlayerExit -= OnPlayerExitHiding;
+
+        TransitionManager.TransitionStarted -= StopMovement;
+        TransitionManager.TransitionEnded -= StartMovement;
     }
 
     void Start()
@@ -64,13 +70,9 @@ public class PlayerMovement : MonoBehaviour
         if(isDashing) return;
 
         rb.linearVelocity = (Vector3)currentInput * movingSpeed;
-    }
 
-    private void ChangeMovingDirection()
-    {
-        if(currentInput.sqrMagnitude > 0.01f) lastInput = currentInput.normalized; 
-        currentInput = Input.MoveAction.ReadValue<Vector2>().normalized;
-
+        if(playerState != PlayerState.Normal) return;
+        
         animator.SetFloat("MovX", currentInput.x);
         animator.SetFloat("MovY", currentInput.y);
         animator.SetBool("IsMoving", currentInput.sqrMagnitude > 0.01f);
@@ -80,6 +82,12 @@ public class PlayerMovement : MonoBehaviour
             animator.SetFloat("MovX", lastInput.x);
             animator.SetFloat("MovY", lastInput.y);
         }
+    }
+
+    private void ChangeMovingDirection()
+    {
+        if(currentInput.sqrMagnitude > 0.01f) lastInput = currentInput.normalized; 
+        currentInput = Input.MoveAction.ReadValue<Vector2>().normalized;
     }
 
     #endregion
@@ -132,10 +140,20 @@ public class PlayerMovement : MonoBehaviour
 
     #endregion
 
-    private void OnPlayerHide(HidingSpot spot)
+    public void StopMovement()
     {
         StopDash();
         playerState = PlayerState.Hiding;
+    }
+
+    public void StartMovement()
+    {
+        playerState = PlayerState.Normal;
+    }
+
+    private void OnPlayerHide(HidingSpot spot)
+    {
+        StopMovement();
 
         animator.SetBool("IsHiding", true);
     }

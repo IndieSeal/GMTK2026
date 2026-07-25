@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: DoorDown
+  m_Controller: {fileID: 9100000, guid: 4fbb1ae27f4ed1adf86a9172fe11f6e0, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: eb936f58588252a91a2ca4e3fde104c1, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 5fc17c7a83d95d7bdbc415a4f580196f, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 07329ccde1475db94bde3231bc078b4c, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: b3f33a4ef6df7949d9d0938dc06e645a, type: 2}

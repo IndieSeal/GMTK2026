@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using FMODUnity;
 using TMPro;
 using UnityEngine;
@@ -9,11 +10,20 @@ public class Door : MonoBehaviour
     public event Action OnCrossed;
     public event Action OnClose;
 
+    [Header("Components")]
     [SerializeField] private Door linkedDoor; 
+    [SerializeField] private Animator animator;
+
     [SerializeField] private InteractableReceiver openCollider;
     [SerializeField] private Collider2D doorCollider;
     [SerializeField] private HitReceiver crossDoorCollider;
-    public bool IsClosed { get; set; } = true;
+    public bool IsClosed { get => isClosed; set
+        {
+            isClosed = value;
+            Debug.Log(isClosed);
+            animator.SetBool("IsClosed", IsClosed);
+        }}
+    private bool isClosed = true;
 
     [SerializeField] private Transform startPosition;
     public Transform tpTransform => startPosition.transform;
@@ -23,6 +33,7 @@ public class Door : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private EventReference OpenEvent;
     [SerializeField] private EventReference CloseEvent;
+    private Coroutine fadeCoroutine;
 
     void Awake()
     {
@@ -49,11 +60,18 @@ public class Door : MonoBehaviour
 
     private void MoveTowardsDoor(GameObject go)
     {
-        if(!go.TryGetComponent(out PlayerMovement player) || IsClosed) return;
+        if(!go.TryGetComponent(out PlayerMovement player) || IsClosed || fadeCoroutine != null) return;
 
         linkedDoor.IsClosed = IsClosed;
+        fadeCoroutine = StartCoroutine(TransitionManager.Instance.FadeCoroutine(1, () => MoveTowardsDoorCoroutine(player), () => MoveTowardsDoorFinal(player)));
+    }
+
+    private void MoveTowardsDoorCoroutine(PlayerMovement player)
+    {
         player.transform.position = linkedDoor.tpTransform.position;
     }
+
+    private void MoveTowardsDoorFinal(PlayerMovement player) => fadeCoroutine = null;
 
     private void InteractWithDoor()
     {
@@ -76,10 +94,13 @@ public class Door : MonoBehaviour
 
     public void Open(bool forced = false)
     {
-        //doorCollider.enabled = false;
         IsClosed = false;
 
-        if(forced) openCollider.gameObject.SetActive(true);
+        if(forced)
+        {
+            doorCollider.enabled = true;
+            openCollider.gameObject.SetActive(true);
+        }
 
         RuntimeManager.PlayOneShot(OpenEvent, transform.position);
         
@@ -97,12 +118,12 @@ public class Door : MonoBehaviour
 
     public void Close(bool forced = false)
     {        
-        //doorCollider.enabled = true;
         bool wasPreviouslyClosed = IsClosed;
         IsClosed = true;
 
         if(forced)
         {
+            doorCollider.enabled = false;
             openCollider.gameObject.SetActive(false);
             HidePrompt();
         }
@@ -117,6 +138,7 @@ public class Door : MonoBehaviour
 
     public void RemoveForcedDoor()
     {
+        doorCollider.enabled = true;
         openCollider.gameObject.SetActive(true);
     }
 
