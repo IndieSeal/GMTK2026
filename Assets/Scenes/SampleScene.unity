@@ -1622,6 +1622,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AStarPathfinder
   groundTilemap: {fileID: 214323837}
+  demoObjA: {fileID: 0}
+  demoObjB: {fileID: 0}
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0

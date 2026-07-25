@@ -1,11 +1,17 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class PositionNode
 {
-    Vector2 position;
-    List<Vector2> neighbors;
+    public Vector2 position;
+    public List<Vector2> neighbors;
+
+    // A*
+    public PositionNode cameFrom;
+    public float gScore;
+    public float hScore;
 
     public PositionNode(Vector2 pos)
     {
@@ -23,6 +29,17 @@ public class PositionNode
         this.neighbors = new(){ nw, n, ne, w, e, sw, s, se };
     }
 
+    public void debugDrawMe(Color color, float duration)
+    {
+        Debug.DrawLine((Vector3)position, (Vector3)(position + Vector2.one), color, duration);
+    }
+
+    public float getFScore()
+    {
+        return gScore + hScore;
+    }
+
+
     public bool equals( PositionNode other )
     {
         return other.position == this.position;
@@ -37,6 +54,11 @@ public class PositionNode
         }
         return false;
     }
+
+    public float distance(PositionNode other)
+    {
+        return Vector2.Distance( this.position, other.position );
+    }
 }
 
 public class AStarPathfinder : MonoBehaviour
@@ -47,16 +69,113 @@ public class AStarPathfinder : MonoBehaviour
     void Start()
     {
         // for testing purposes start the flood at a default spot to test generating paths
-        floodSearchFindTiles(new Vector3Int(14,0,0));
+        //floodSearchFindTiles(new Vector3Int(14,0,0));
+
+        //generatePath(allPositions[5], allPositions[allPositions.Count-5]);
     }
 
     void Update()
     {
         //Debug.DrawLine(Vector2.zero, Vector2.one*3, Color.green, 1f); // -0.5, -0.5 to 0.5, 0.5
-        
-
     }
 
+    public void clearNodeScores()
+    {
+        for(int i=0; i<allPositions.Count; i++)
+        {
+            PositionNode pn = allPositions[i];
+            pn.gScore = float.MaxValue;
+            pn.cameFrom = null;
+        }
+    }
+
+    public List<PositionNode> generatePath(PositionNode start, PositionNode end)
+    {
+        if(start == null || end == null){ return new(); }
+
+        List<PositionNode> openSet = new();
+        clearNodeScores();
+
+        start.gScore = 0;
+        start.hScore = start.distance(end);
+        openSet.Add(start);
+
+        while(openSet.Count > 0)
+        {
+            int lowestF = default;
+
+            for(int i=0; i<openSet.Count; i++)
+            {
+                if(openSet[i].getFScore() < openSet[lowestF].getFScore())
+                {
+                    lowestF = i;
+                }
+            }
+
+            PositionNode currentNode = openSet[lowestF];
+            openSet.Remove(currentNode);
+
+            if (currentNode.equals(end))
+            {
+                List<PositionNode> path = new();
+                
+                path.Insert(0, end);
+                
+                while(currentNode.equals(start) == false)
+                {
+                    currentNode = currentNode.cameFrom;
+                    path.Add(currentNode);
+                    currentNode.debugDrawMe(Color.orange, 0.1f);
+                }
+
+                path.Reverse();
+                return path;
+            }
+
+            List<PositionNode> neighbors = new();
+            for(int i=0; i<allPositions.Count; i++)
+            {
+                if(currentNode.neighbors.Contains(allPositions[i].position) == false){ continue; }
+                neighbors.Add(allPositions[i]);
+            }
+            foreach(PositionNode connectedNode in neighbors)
+            {
+                float heldGScore = currentNode.gScore + currentNode.distance(connectedNode);
+                if(heldGScore < connectedNode.gScore)
+                {
+                    connectedNode.cameFrom = currentNode;
+                    connectedNode.gScore = heldGScore;
+                    connectedNode.hScore = connectedNode.distance(end);
+
+                    if(!openSet.Contains(connectedNode)){ openSet.Add(connectedNode); }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    PositionNode getNearestNodeFromPos(Vector2 target)
+    {
+        Vector3Int v3i = Vector3Int.FloorToInt((Vector3)target);
+        floodSearchFindTiles(v3i);
+
+        PositionNode closest = null;
+        float closestDist = float.MaxValue;
+        for(int i=0; i<allPositions.Count; i++)
+        {
+            PositionNode pn = allPositions[i];
+            float dist = Vector2.Distance(target, pn.position);
+            if(dist > closestDist){ continue; }
+            
+            closest = pn;
+            closestDist = dist;
+        }
+
+        return closest;
+    }
+
+    // lets us know what tiles we can and cannot walk on
     void floodSearchFindTiles(Vector3Int startPosition)
     {
         if(groundTilemap == null){ return; }
@@ -96,6 +215,7 @@ public class AStarPathfinder : MonoBehaviour
             i--; // preserve the index in our loop
             */
             allPositions.Add( pNode );
+            pNode.debugDrawMe(Color.green, onSearchPutLineDuration);
 
             // add adjacent items to search
             toSearchTiles.Add(nw);
@@ -106,8 +226,6 @@ public class AStarPathfinder : MonoBehaviour
             toSearchTiles.Add(sw);
             toSearchTiles.Add(s);
             toSearchTiles.Add(se);
-            
-            Debug.DrawLine(pos, pos + Vector3Int.one, Color.green, onSearchPutLineDuration);
         }
 
         //Debug.Log("Flood search discovery done!");
