@@ -17,9 +17,9 @@ public class BaseAI : MonoBehaviour
     public bool hasReachedAnyWaypoint = true; // if true will recalculate new path
 
     // Shooting
-    float attackCooldown = 0f;
+    public float attackCooldown = 0f;
     float currentAttackCooldown = 2f;
-    float bulletVelocity = 5f;
+    public float bulletVelocity = 5f;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -46,6 +46,7 @@ public class BaseAI : MonoBehaviour
             PositionNode start = AStarPathfinder.instance.getNearestNodeFromPos(enemyPos);
             PositionNode end = AStarPathfinder.instance.getNearestNodeFromPos(endTargetPosition);
             moveWayPoints = AStarPathfinder.instance.generatePath(start, end);
+            moveWayPoints.Add(end); // i dont think `end` is being added in the A* algorithm so imma add it here rq
 
             hasReachedAnyWaypoint = false;
         }
@@ -59,7 +60,7 @@ public class BaseAI : MonoBehaviour
             }
 
             float dist = Vector2.Distance(enemyPos, moveWayPoints[0].position);
-            if(dist > 1){ break; }
+            if(dist > 0.3){ break; }
             moveWayPoints.RemoveAt(0);
             //hasReachedAnyWaypoint = true;
         }
@@ -82,9 +83,8 @@ public class BaseAI : MonoBehaviour
         currentAttackCooldown = attackCooldown;
 
         GameObject bulletInstance = SharedGameObjectPool.Rent(attackProjectile, transform.position, Quaternion.identity);
-        Vector2 heading = (Vector2)transform.position - targetPosition;
+        Vector2 heading = targetPosition - (Vector2)transform.position;
 
-        // uhh so like make this shooting thing work later, i gotta make naivgation shi
         if(bulletInstance.TryGetComponent(out Rigidbody2D rb)){
             rb.linearVelocity = heading.normalized * bulletVelocity;
         }

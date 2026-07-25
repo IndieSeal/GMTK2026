@@ -104,6 +104,9 @@ public class AStarPathfinder : MonoBehaviour
     {
         if(start == null || end == null){ return new(); }
 
+        start.debugDrawMe(Color.blue, 0.1f);
+        end.debugDrawMe(Color.aliceBlue, 0.1f);
+
         List<PositionNode> openSet = new();
         clearNodeScores();
 

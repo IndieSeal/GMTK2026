@@ -6338,9 +6338,11 @@ MonoBehaviour:
   rb: {fileID: 0}
   attackProjectile: {fileID: 6570887796550925665, guid: 86d31d107b9a00db5aeed85f9ab6b100, type: 3}
   moveSpeed: 4
-  targetDistanceFromPlayer: 3
+  targetDistanceFromPlayer: 5
   endTargetPosition: {x: 0, y: 0}
   hasReachedAnyWaypoint: 1
+  attackCooldown: 2
+  bulletVelocity: 5
   reappearTelegraphTime: 0.5
 --- !u!50 &1289152540
 Rigidbody2D:
@@ -6357,7 +6359,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
