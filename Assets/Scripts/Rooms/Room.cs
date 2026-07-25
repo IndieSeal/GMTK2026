@@ -1,12 +1,20 @@
+using System;
 using System.Collections.Generic;
+using FMODUnity;
 using UnityEngine;
 
 public class Room : MonoBehaviour
 {
+    public event Action OnRoomClearedEvent;
+
+    [Header("Audio")]
+    [SerializeField] private EventReference RoomCleared;
+    
     [SerializeField] private List<Door> doors = new List<Door>();
 
     // Got to make it so it's waves instead of all enemies at once without waves
     [SerializeField] private List<EnemyBase> enemies = new List<EnemyBase>();
+
     public bool HasRoomBeenCleared { get; private set; }= false;
     private bool hasRoomBeenEntered = false;
     private int enemiesKilled;
@@ -37,11 +45,17 @@ public class Room : MonoBehaviour
 
         foreach(Door door in doors) door.Close(true);
         foreach(EnemyBase enemy in enemies) enemy.OnStartBehaviour();
+
+        if(enemies.Count == 0) OnRoomCleared();
     }
 
     private void OnRoomCleared()
     {
+        RuntimeManager.PlayOneShot(RoomCleared, transform.position);
+
         HasRoomBeenCleared = true;
         foreach(Door door in doors) door.RemoveForcedDoor();
+
+        OnRoomClearedEvent?.Invoke();
     }
 }

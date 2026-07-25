@@ -5,6 +5,7 @@ public class Monster : MonoBehaviour
 {
     [SerializeField] private float minSpeed = 7;
     [SerializeField] private float maxSpeed = 10;
+    [SerializeField] private float pauseDelay = 2;
     
     private PlayerMovement playerInstance;
     private Candle candleInstance;
@@ -70,7 +71,7 @@ public class Monster : MonoBehaviour
 
     private IEnumerator OnRoomChangedCoroutine()
     {
-        yield return new WaitForSeconds(4);
+        yield return new WaitForSeconds(pauseDelay);
         justDelay = false;
     }
 
