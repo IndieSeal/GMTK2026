@@ -7,6 +7,12 @@ public class PositionNode
     Vector2 position;
     List<Vector2> neighbors;
 
+    public PositionNode(Vector2 pos)
+    {
+        this.position = pos;
+        this.neighbors = new();
+    }
+
     public PositionNode(
         Vector2 nw, Vector2 n, Vector2 ne,
         Vector2 w, Vector2 pos, Vector2 e,
@@ -17,9 +23,19 @@ public class PositionNode
         this.neighbors = new(){ nw, n, ne, w, e, sw, s, se };
     }
 
-    public bool Equals( PositionNode other )
+    public bool equals( PositionNode other )
     {
         return other.position == this.position;
+    }
+
+    public bool contains( List<PositionNode> otherList )
+    {
+        for(int i=0; i<otherList.Count; i++)
+        {
+            PositionNode other = otherList[i];
+            if(this.equals(other)){ return true; }
+        }
+        return false;
     }
 }
 
@@ -50,6 +66,7 @@ public class AStarPathfinder : MonoBehaviour
 
         for(int i=0; i<toSearchTiles.Count; i++)
         {
+            if(i < 0){ break; }
             Vector3Int pos = toSearchTiles[i];
             Vector2 posVec2 = (Vector2)(Vector3)pos; // cast to a Vector3, THEN to a Vector2 because i cant do Vector3Int -> Vector2 :sob:
 
@@ -67,17 +84,17 @@ public class AStarPathfinder : MonoBehaviour
                 (Vector2)(Vector3)w, posVec2, (Vector2)(Vector3)e,
                 (Vector2)(Vector3)sw, (Vector2)(Vector3)s, (Vector2)(Vector3)se
             );
-            Debug.Log(allPositions.Contains(pNode));
-
-            // remove it type shit
-            toSearchTiles.RemoveAt(i);
-            i--; // preserve the index in our loop
             
-            if( allPositions.Contains(pNode) ){ continue; } // we already searched this point, move on
+            if(pNode.contains(allPositions)){ continue; } // we already searched this point, move on
 
             TileBase tile = groundTilemap.GetTile(pos);
-            if(tile == null){ continue; }
+            if(tile == null){ continue; } // empty tile, nothing to see here
 
+            /*
+            // we dont actually need to remove it since we are just going to increment `i` and continue on
+            toSearchTiles.RemoveAt(i);
+            i--; // preserve the index in our loop
+            */
             allPositions.Add( pNode );
 
             // add adjacent items to search
@@ -93,6 +110,6 @@ public class AStarPathfinder : MonoBehaviour
             Debug.DrawLine(pos, pos + Vector3Int.one, Color.green, onSearchPutLineDuration);
         }
 
-        Debug.Log("Flood search discovery done!");
+        //Debug.Log("Flood search discovery done!");
     }
 }

@@ -350,7 +350,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58c8add975344a86ebe67a3fe4558f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HidingSpot
+  interactPrompt: {fileID: 0}
   hidingTransform: {fileID: 0}
+  EnterEvent:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  ExitEvent:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
 --- !u!1001 &183996285
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1594,6 +1609,19 @@ MonoBehaviour:
   attackProjectile: {fileID: 6570887796550925665, guid: 86d31d107b9a00db5aeed85f9ab6b100, type: 3}
   targetDistanceFromPlayer: 10
   reappearTelegraphTime: 0.5
+--- !u!114 &618942044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 618942037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d83cd5a4300040a39a8fa7ac98fc92e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AStarPathfinder
+  groundTilemap: {fileID: 214323837}
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -3377,6 +3405,13 @@ MonoBehaviour:
   bulletPrefab: {fileID: 6570887796550925665, guid: 86d31d107b9a00db5aeed85f9ab6b100, type: 3}
   bulletVelocity: 10
   centerTransform: {fileID: 1680466121}
+  ShootEvent:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   globalLight: {fileID: 619394801}
   candleLight: {fileID: 846003476}
   volume: {fileID: 2075217358}
@@ -3766,7 +3801,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f402e2facbb431c5d89d7482795461a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitReceiver
-  healthSystem: {fileID: 1680466127}
 --- !u!1 &1672235848
 GameObject:
   m_ObjectHideFlags: 0
@@ -4375,6 +4409,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 433082267112030532, guid: 2b75c005737a773aeaf3735e7a549110, type: 3}
       insertIndex: -1
       addedObject: {fileID: 618942043}
+    - targetCorrespondingSourceObject: {fileID: 433082267112030532, guid: 2b75c005737a773aeaf3735e7a549110, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 618942044}
   m_SourcePrefab: {fileID: 100100000, guid: 2b75c005737a773aeaf3735e7a549110, type: 3}
 --- !u!1001 &3005741792019076831
 PrefabInstance:
