@@ -21,7 +21,7 @@ public class DisappearingEnemy : BaseAI
     public new void Update()
     {
         base.Update();
-        Shoot();
+        //Shoot();
     }
 
 
@@ -32,7 +32,7 @@ public class DisappearingEnemy : BaseAI
         spriteColor.a = 1; // visible
         base.spriteRenderer.color = spriteColor;
         StartCoroutine(HandleReapearTelegraphDelay()); // wait a sec after reappearing
-        base.Shoot( new Vector3(0,0,0) );
+        base.Shoot( new Vector3(0,0,0) ); // need a target position, some global player pos?
         StartCoroutine(HandleReapearTelegraphDelay()); // wait a sec after shooting
         spriteColor.a = 0; // transparent
         base.spriteRenderer.color = spriteColor;

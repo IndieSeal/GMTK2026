@@ -350,6 +350,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58c8add975344a86ebe67a3fe4558f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HidingSpot
+  hidingTransform: {fileID: 0}
 --- !u!1001 &183996285
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1573,6 +1574,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioListener
   nonRigidbodyVelocity: 0
   attenuationObject: {fileID: 0}
+--- !u!1 &618942037 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 433082267112030532, guid: 2b75c005737a773aeaf3735e7a549110, type: 3}
+  m_PrefabInstance: {fileID: 1879366342157281434}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &618942043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 618942037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1184895bf04b94ea9d78780c0ce3a4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DisappearingEnemy
+  attackProjectile: {fileID: 6570887796550925665, guid: 86d31d107b9a00db5aeed85f9ab6b100, type: 3}
+  targetDistanceFromPlayer: 10
+  reappearTelegraphTime: 0.5
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -3921,6 +3942,7 @@ MonoBehaviour:
   movingSpeed: 5
   dashVelocity: 7
   dashDuration: 0.5
+  dashDelay: 1.3
 --- !u!114 &1680466123
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4349,7 +4371,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 433082267112030532, guid: 2b75c005737a773aeaf3735e7a549110, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 618942043}
   m_SourcePrefab: {fileID: 100100000, guid: 2b75c005737a773aeaf3735e7a549110, type: 3}
 --- !u!1001 &3005741792019076831
 PrefabInstance:
