@@ -15,6 +15,8 @@ public class HealthSystem : MonoBehaviour
     public int CurrentHealth { get; private set; }
 
     [SerializeField] private Renderer hitRenderer;
+
+    [SerializeField] private bool playSound = false;
     [SerializeField] private EventReference HitSound;
 
     public bool IsInmune { get; set; } = false;
@@ -42,7 +44,7 @@ public class HealthSystem : MonoBehaviour
         OnCharacterDamaged?.Invoke();
 
         if(hitRenderer != null) StartCoroutine(OnHit());
-        if(!string.IsNullOrEmpty(HitSound.Path)) RuntimeManager.PlayOneShot(HitSound);
+        if(playSound) RuntimeManager.PlayOneShot(HitSound);
         if(CurrentHealth <= 0) OnCharacterDeath?.Invoke();
     }
 

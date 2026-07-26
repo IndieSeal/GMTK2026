@@ -38337,6 +38337,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HealthSystem
   maxHealth: 5
   hitRenderer: {fileID: 1102550385}
+  playSound: 1
   HitSound:
     Guid:
       Data1: 1022679273
