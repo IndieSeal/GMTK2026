@@ -7,6 +7,7 @@ using UnityEngine;
 public class Door : MonoBehaviour
 {
     public static event Action OnRoomChanged;
+    public static event Action OnRoomChangedEnd;
 
     public event Action OnOpen;
     public event Action OnCrossed;
@@ -69,17 +70,28 @@ public class Door : MonoBehaviour
 
         linkedDoor.IsClosed = IsClosed;
         OnRoomChanged?.Invoke();
+
+        StartCoroutine(Footsteps());
         fadeCoroutine = StartCoroutine(TransitionManager.Instance.FadeCoroutine(1, () => MoveTowardsDoorCoroutine(player), () => MoveTowardsDoorFinal(player)));
     }
 
     private void MoveTowardsDoorCoroutine(PlayerMovement player)
     {
-        RuntimeManager.PlayOneShot(footstepEvent);
         player.transform.position = linkedDoor.tpTransform.position;
+    }
+
+    private IEnumerator Footsteps()
+    {
+        RuntimeManager.PlayOneShot(footstepEvent);
+        yield return new WaitForSeconds(0.2f);
+        RuntimeManager.PlayOneShot(footstepEvent);
+        yield return new WaitForSeconds(0.2f);
+        RuntimeManager.PlayOneShot(footstepEvent);
     }
 
     private void MoveTowardsDoorFinal(PlayerMovement player)
     {
+        OnRoomChangedEnd?.Invoke();
         fadeCoroutine = null;
     }
 
@@ -126,7 +138,7 @@ public class Door : MonoBehaviour
         OnCrossed?.Invoke();
     }
 
-    public void Close(bool forced = false)
+    public void Close(bool forced = false, bool playAudio = true)
     {        
         bool wasPreviouslyClosed = IsClosed;
         IsClosed = true;
@@ -141,7 +153,7 @@ public class Door : MonoBehaviour
 
         OnClose?.Invoke();
 
-        if(wasPreviouslyClosed) return;
+        if(wasPreviouslyClosed || !playAudio) return;
 
         RuntimeManager.PlayOneShot(CloseEvent, transform.position);
     }

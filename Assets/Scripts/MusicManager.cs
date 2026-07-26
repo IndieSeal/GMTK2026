@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MusicManager : Singleton<MusicManager>
 {
+    [SerializeField] private StudioEventEmitter music;
+    [SerializeField] private StudioEventEmitter chaseMusic;
     private Candle candle;
 
     protected override void Awake()
@@ -19,11 +21,17 @@ public class MusicManager : Singleton<MusicManager>
     void OnEnable()
     {
         PlayerMovement.OnPlayerDeath += ChangeDeathParameter;
+
+        ChaseSequence.OnChaseSequenceStart += SilenceMusic;
+        ChaseSequence.OnChaseSequenceTP += StartChaseMusic;
     }
 
     void OnDisable()
     {
         PlayerMovement.OnPlayerDeath -= ChangeDeathParameter;
+
+        ChaseSequence.OnChaseSequenceStart -= SilenceMusic;
+        ChaseSequence.OnChaseSequenceTP -= StartChaseMusic;
     }
 
     void Update()
@@ -43,8 +51,20 @@ public class MusicManager : Singleton<MusicManager>
         RuntimeManager.StudioSystem.setParameterByName("Stress", stressLevel);
     }
 
+    private void StartChaseMusic()
+    {
+        chaseMusic.Play();
+    }
+
+    private void SilenceMusic()
+    {
+        music.Stop();
+    }
+
     private void ChangeDeathParameter()
     {
+        chaseMusic.Stop();
+        if(!music.IsPlaying()) music.Play();
         RuntimeManager.StudioSystem.setParameterByName("Death", 1);
     }
 }

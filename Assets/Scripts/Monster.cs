@@ -1,13 +1,18 @@
 using System.Collections;
+using FMODUnity;
 using UnityEngine;
 
 public class Monster : MonoBehaviour
 {
     [SerializeField] private float minSpeed = 7;
     [SerializeField] private float maxSpeed = 10;
+    [SerializeField] private float chaseSpeed = 15;
     [SerializeField] private float pauseDelay = 2;
 
     [SerializeField] private float speedyDistance = 30;
+
+    [SerializeField] private ParticleSystem spawnParticles;
+    [SerializeField] private EventReference screamSound;
     
     private PlayerMovement playerInstance;
     private Candle candleInstance;
@@ -15,6 +20,7 @@ public class Monster : MonoBehaviour
     private Vector2 targetPosition = new(30, 10);
     private bool isHiding;
     private bool justDelay;
+    private bool isFinalChasing;
     
     void Awake()
     {
@@ -30,8 +36,11 @@ public class Monster : MonoBehaviour
         HidingSpot.OnPlayerExit += StopHiding;
 
         Door.OnRoomChanged += OnRoomChanged;
-
         PlayerMovement.OnPlayerDeath += OnPlayerDeath;
+
+        ChaseSequence.OnChaseSequenceStart += RandomizePosition;
+        ChaseSequence.OnChaseSequenceTP += SpawnIn;
+        ChaseSequence.OnChaseSequenceChase += StartCHASE;
     }
 
     void OnDisable()
@@ -41,6 +50,10 @@ public class Monster : MonoBehaviour
 
         Door.OnRoomChanged -= OnRoomChanged;
         PlayerMovement.OnPlayerDeath -= OnPlayerDeath;
+
+        ChaseSequence.OnChaseSequenceStart -= RandomizePosition;
+        ChaseSequence.OnChaseSequenceTP -= SpawnIn;
+        ChaseSequence.OnChaseSequenceChase -= StartCHASE;
     }
 
     private void OnPlayerDeath()
@@ -51,10 +64,46 @@ public class Monster : MonoBehaviour
     void Update()
     {
         Move();
-        
-        if(justDelay || isHiding || candleInstance.GetCandleValue() < 0.4f) return;
 
+        if (!isFinalChasing)
+        {
+            if(justDelay || candleInstance.GetCandleValue() < 0.4f) return;
+        }
+
+        if(isHiding) return;
         targetPosition = playerInstance.transform.position;
+    }
+
+    private void SpawnIn()
+    {
+        Vector2 targetPosition = PlayerMovement.instance.transform.position + new Vector3(-2, 2);
+        spawnParticles.transform.position = targetPosition;
+        spawnParticles.Play();
+
+        justDelay = true;
+        this.targetPosition = targetPosition;
+
+        RuntimeManager.PlayOneShot(screamSound);
+
+        StartCoroutine(Appear(targetPosition));
+    }
+
+    private IEnumerator Appear(Vector2 appear)
+    {
+        yield return new WaitForSeconds(0.3f);
+        transform.position = appear;
+    }
+
+    private void StartCHASE()
+    {
+        StartCoroutine(ChaseDelay());
+    }
+
+    private IEnumerator ChaseDelay()
+    {
+        yield return new WaitForSeconds(1.5f);
+        justDelay = false;
+        isFinalChasing = true;
     }
 
     private void Move()
@@ -62,7 +111,9 @@ public class Monster : MonoBehaviour
         float velocity = Mathf.InverseLerp(0.4f, 1, candleInstance.GetCandleValue());
         velocity = Mathf.Lerp(minSpeed, maxSpeed, velocity);
 
-        if(Vector2.Distance(transform.position, playerInstance.transform.position) > speedyDistance) velocity = maxSpeed * 2;
+        if(isFinalChasing) velocity = chaseSpeed;
+        if(Vector2.Distance(transform.position, playerInstance.transform.position) > speedyDistance) velocity *=  2;
+        
         transform.position = Vector2.MoveTowards(transform.position, targetPosition, velocity * Time.deltaTime);
     }
 
@@ -79,6 +130,8 @@ public class Monster : MonoBehaviour
 
     private void OnRoomChanged()
     {
+        if(isFinalChasing) return;
+        
         targetPosition += Vector2.one * 5;
         justDelay = true;
         

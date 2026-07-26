@@ -25,6 +25,8 @@ public class CameraManager : MonoBehaviour
         HidingSpot.OnPlayerExit += PlayerExitSpot;
 
         PlayerMovement.OnPlayerDeath += OnCharacterDeath;
+
+        ChaseSequence.OnChaseSequenceStart += OnChaseSequenceStart;
     }
 
     void OnDisable()
@@ -33,6 +35,13 @@ public class CameraManager : MonoBehaviour
         HidingSpot.OnPlayerExit -= PlayerExitSpot;
 
         PlayerMovement.OnPlayerDeath -= OnCharacterDeath;
+
+        ChaseSequence.OnChaseSequenceStart -= OnChaseSequenceStart;
+    }
+
+    private void OnChaseSequenceStart()
+    {
+        StartCoroutine(ShakeCoroutine(1f, 3f, 6f, 3f));
     }
 
     void Start()

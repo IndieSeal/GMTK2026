@@ -51,6 +51,8 @@ public class Room : MonoBehaviour
 
     private void OnRoomCleared()
     {
+        if(HasRoomBeenCleared) return;
+        
         RuntimeManager.PlayOneShot(RoomCleared, transform.position);
 
         HasRoomBeenCleared = true;

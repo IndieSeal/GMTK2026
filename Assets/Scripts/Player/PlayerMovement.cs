@@ -32,6 +32,7 @@ public class PlayerMovement : MonoBehaviour
     private bool isDashing;
     private bool dashRecharging;
     private Coroutine dashCoroutine;
+    private bool isBeingChased;
 
     public PlayerState playerState { get; private set; } = PlayerState.Normal;
 
@@ -51,6 +52,12 @@ public class PlayerMovement : MonoBehaviour
         TransitionManager.TransitionEnded += StartMovement;
 
         healthSystem.OnCharacterDeath += OnDeath;
+
+        ChaseSequence.OnChaseSequenceStart += StopMovement;
+        ChaseSequence.OnChaseSequenceChase += StartMovement;
+
+        Door.OnRoomChanged += Inmunity;
+        Door.OnRoomChangedEnd += DisableInmunity;
     }
 
     void OnDisable()
@@ -62,6 +69,12 @@ public class PlayerMovement : MonoBehaviour
         TransitionManager.TransitionEnded -= StartMovement;
 
         healthSystem.OnCharacterDeath -= OnDeath;
+
+        ChaseSequence.OnChaseSequenceStart -= StopMovementChase;
+        ChaseSequence.OnChaseSequenceChase -= StartMovementChase;
+
+        Door.OnRoomChanged -= Inmunity;
+        Door.OnRoomChangedEnd -= DisableInmunity;
     }
 
     void Start()
@@ -82,6 +95,16 @@ public class PlayerMovement : MonoBehaviour
         
         HandleMove();
         HandleDash();
+    }
+
+    private void Inmunity()
+    {
+        healthSystem.IsInmune = true;
+    }
+
+    private void DisableInmunity()
+    {
+        healthSystem.IsInmune = false;
     }
 
     #region Movement
@@ -177,12 +200,27 @@ public class PlayerMovement : MonoBehaviour
 
     public void StartMovement()
     {
+        if(isBeingChased) return;
+
         playerState = PlayerState.Normal;
+    }
+
+    public void StopMovementChase()
+    {
+        isBeingChased = true;
+        StopMovement();
+    }
+
+    public void StartMovementChase()
+    {
+        isBeingChased = false;
+        StartMovement();
     }
 
     private void OnPlayerHide(HidingSpot spot)
     {
         StopMovement();
+        Inmunity();
 
         animator.SetBool("IsHiding", true);
     }
@@ -190,6 +228,7 @@ public class PlayerMovement : MonoBehaviour
     private void OnPlayerExitHiding(HidingSpot spot)
     {
         playerState = PlayerState.Normal;
+        DisableInmunity();
 
         animator.SetBool("IsHiding", false);
     }
