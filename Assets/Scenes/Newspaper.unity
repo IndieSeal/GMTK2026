@@ -1018,7 +1018,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fb6c58a051feb935a1294520ae5c4f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TransitionAfter
-  waitFor: 10
+  waitFor: 13
   sceneName: SampleScene
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

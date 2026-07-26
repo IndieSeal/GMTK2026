@@ -54,9 +54,7 @@ public class Tutorial1 : MonoBehaviour
     private IEnumerator EnterPhase1Coroutine()
     {
         yield return WaitForDialogue(dialogue1);
-        yield return new WaitForSeconds(0.2f);
         yield return WaitForDialogue(dialogue2);
-        yield return new WaitForSeconds(0.2f);
         if(!string.IsNullOrEmpty(dialogue3)) yield return WaitForDialogue(dialogue3);
     }
 
@@ -83,9 +81,8 @@ public class Tutorial1 : MonoBehaviour
 
         while(!waitForDialogue) yield return null;
 
-        EndDialogue();
-
         yield return new WaitForSeconds(endDelay);
+        EndDialogue();
     }
 
     private void EndDialogue()

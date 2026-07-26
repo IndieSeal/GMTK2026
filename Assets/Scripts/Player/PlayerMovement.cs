@@ -53,8 +53,8 @@ public class PlayerMovement : MonoBehaviour
 
         healthSystem.OnCharacterDeath += OnDeath;
 
-        ChaseSequence.OnChaseSequenceStart += StopMovement;
-        ChaseSequence.OnChaseSequenceChase += StartMovement;
+        ChaseSequence.OnChaseSequenceStart += StopMovementChase;
+        ChaseSequence.OnChaseSequenceChase += StartMovementChase;
 
         Door.OnRoomChanged += Inmunity;
         Door.OnRoomChangedEnd += DisableInmunity;

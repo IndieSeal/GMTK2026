@@ -7,12 +7,12 @@ using UnityEngine;
 public class Door : MonoBehaviour
 {
     public static event Action OnRoomChanged;
-    public static event Action<Door> OnRoomChangedW;
     public static event Action OnRoomChangedEnd;
 
     public event Action OnOpen;
     public event Action OnCrossed;
     public event Action OnClose;
+    public event Action OnRoomChangedW;
 
     [Header("Components")]
     [SerializeField] private Door linkedDoor; 
@@ -71,7 +71,7 @@ public class Door : MonoBehaviour
 
         linkedDoor.IsClosed = IsClosed;
         OnRoomChanged?.Invoke();
-        OnRoomChangedW?.Invoke(this);
+        OnRoomChangedW?.Invoke();
 
         StartCoroutine(Footsteps());
         fadeCoroutine = StartCoroutine(TransitionManager.Instance.FadeCoroutine(1, () => MoveTowardsDoorCoroutine(player), () => MoveTowardsDoorFinal(player)));

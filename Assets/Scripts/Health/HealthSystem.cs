@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using FMODUnity;
 using UnityEngine;
 
 public class HealthSystem : MonoBehaviour
@@ -14,6 +15,7 @@ public class HealthSystem : MonoBehaviour
     public int CurrentHealth { get; private set; }
 
     [SerializeField] private Renderer hitRenderer;
+    [SerializeField] private EventReference HitSound;
 
     public bool IsInmune { get; set; } = false;
 
@@ -30,24 +32,32 @@ public class HealthSystem : MonoBehaviour
 
     public void Damage(int amount)
     {
-        if(IsInmune) return;
+        if(IsInmune)
+        {
+            Debug.Log("immunity");
+            return;
+        }
         
         CurrentHealth = Mathf.Clamp(CurrentHealth - amount, 0, maxHealth);
         OnCharacterDamaged?.Invoke();
 
         if(hitRenderer != null) StartCoroutine(OnHit());
-        
+        if(!string.IsNullOrEmpty(HitSound.Path)) RuntimeManager.PlayOneShot(HitSound);
         if(CurrentHealth <= 0) OnCharacterDeath?.Invoke();
     }
 
     float hitTime = 0.2f;
     private IEnumerator OnHit()
-    {        
+    {
+        Debug.Log("setting value");
+        
         float maxValue = hitTime / 2;
         
         float value = 0;
         while (value < maxValue)
         {
+        Debug.Log("plus");
+
             value += Time.deltaTime;
             hitRenderer.material.SetFloat("_HitEffectBlend", Mathf.Lerp(0, 1, value / maxValue));
             yield return null;
@@ -59,6 +69,8 @@ public class HealthSystem : MonoBehaviour
         value = 0;
         while (value < maxValue)
         {
+        Debug.Log("minus");
+
             value += Time.deltaTime;
             hitRenderer.material.SetFloat("_HitEffectBlend", Mathf.Lerp(1, 0, value / maxValue));
             yield return null;

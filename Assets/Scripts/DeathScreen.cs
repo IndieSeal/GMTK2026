@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using FMODUnity;
 using UnityEngine;
@@ -5,6 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class DeathScreen : MonoBehaviour
 {
+    public static event Action OnNewScene;
+    
     [SerializeField] private Transform deathPosition;
     [SerializeField] private CanvasGroup canvas;
 
@@ -51,6 +54,14 @@ public class DeathScreen : MonoBehaviour
     {
         RuntimeManager.StudioSystem.setParameterByName("Death", 0);
         Input.UnsubscribeToInputAction(Input.InteractAction, ChangeScenes, null, null);
+        OnNewScene?.Invoke();
+
+        StartCoroutine(WaitAFrame());
+    }
+
+    private IEnumerator WaitAFrame()
+    {
+        yield return null;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

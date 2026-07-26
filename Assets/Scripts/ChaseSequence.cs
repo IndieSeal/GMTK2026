@@ -16,6 +16,8 @@ public class ChaseSequence : MonoBehaviour
 
     [SerializeField] private StudioEventEmitter earthquakeEmitter;
 
+    [SerializeField] private GameObject enableForSeconds;
+
     [SerializeField] private List<Room> rooms = new List<Room>();
     private int roomsCompleted;
     private bool shouldBeDone;
@@ -27,6 +29,7 @@ public class ChaseSequence : MonoBehaviour
 
     void OnDisable()
     {
+        earthquakeEmitter.Stop();
         rooms.ForEach(x => x.OnRoomClearedEvent -= OnRoomCompleted);
     }
 
@@ -68,5 +71,9 @@ public class ChaseSequence : MonoBehaviour
         yield return new WaitForSeconds(9f);
 
         OnChaseSequenceChase?.Invoke();
+
+        enableForSeconds.SetActive(true);
+        yield return new WaitForSeconds(0.6f);
+        enableForSeconds.SetActive(false);
     }
 }

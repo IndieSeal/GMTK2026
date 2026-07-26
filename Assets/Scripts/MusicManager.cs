@@ -2,24 +2,22 @@ using FMODUnity;
 using FMOD.Studio;
 using UnityEngine;
 
-public class MusicManager : Singleton<MusicManager>
+public class MusicManager : MonoBehaviour
 {
-    [SerializeField] private StudioEventEmitter music;
+    private EventInstance musicInstance;
+    
     [SerializeField] private StudioEventEmitter chaseMusic;
     private Candle candle;
 
-    protected override void Awake()
+    void Awake()
     {
-        base.Awake();
-
-        if(Instance == this)
-        {
-            DontDestroyOnLoad(gameObject);
-        }
+        CreateNewInstance();
     }
 
     void OnEnable()
     {
+        StartMusic();
+        
         PlayerMovement.OnPlayerDeath += ChangeDeathParameter;
 
         ChaseSequence.OnChaseSequenceStart += SilenceMusic;
@@ -28,10 +26,17 @@ public class MusicManager : Singleton<MusicManager>
 
     void OnDisable()
     {
+        SilenceMusic();
+
         PlayerMovement.OnPlayerDeath -= ChangeDeathParameter;
 
         ChaseSequence.OnChaseSequenceStart -= SilenceMusic;
         ChaseSequence.OnChaseSequenceTP -= StartChaseMusic;
+    }
+
+    private void StartMusic()
+    {
+        musicInstance.start();
     }
 
     void Update()
@@ -58,13 +63,17 @@ public class MusicManager : Singleton<MusicManager>
 
     private void SilenceMusic()
     {
-        music.Stop();
+        musicInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        musicInstance.release();
     }
 
     private void ChangeDeathParameter()
     {
         chaseMusic.Stop();
-        if(!music.IsPlaying()) music.Play();
-        RuntimeManager.StudioSystem.setParameterByName("Death", 1);
+    }
+
+    private void CreateNewInstance()
+    {
+        musicInstance = RuntimeManager.CreateInstance("event:/Music/Main MX");
     }
 }
