@@ -37,7 +37,7 @@ public class KidInput : Singleton<KidInput>
         SetupAction(MoveAction);
         SetupAction(InteractAction);
         SetupAction(FireAction);
-        SetupAction(DashAction);
+        //SetupAction(DashAction);
     }
 
     void OnDisable()
@@ -45,7 +45,7 @@ public class KidInput : Singleton<KidInput>
         UnsetupAction(MoveAction);
         UnsetupAction(InteractAction);
         UnsetupAction(FireAction);
-        UnsetupAction(DashAction);
+        //UnsetupAction(DashAction);
     }
 
     private void SetupAction(InputAction inputAction)

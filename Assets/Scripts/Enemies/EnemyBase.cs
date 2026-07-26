@@ -11,7 +11,7 @@ public abstract class EnemyBase : MonoBehaviour
 
     void Awake()
     {
-        OnStopBehaviour();
+        //OnStopBehaviour();
     }
 
     void OnEnable()

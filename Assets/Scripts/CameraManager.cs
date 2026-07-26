@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 //Thanks unity forums: https://discussions.unity.com/t/move-camera-towards-mouse-in-2d/836269/7
@@ -7,6 +8,7 @@ public class CameraManager : MonoBehaviour
     
     [Header("Target")]
     [SerializeField] private Transform follow;
+    [SerializeField] private Transform cameraShake;
     private Transform oldFollow;
 
     [Header("Movement")]
@@ -16,6 +18,8 @@ public class CameraManager : MonoBehaviour
     private Vector3 cameraOffset = Vector2.zero;
     private float targetOffsetX = 0f;
     private bool useOffset = true;
+
+    [SerializeField] private float shakeAmount = 1;
 
     void OnEnable()
     {
@@ -42,6 +46,7 @@ public class CameraManager : MonoBehaviour
     void Update()
     {
         HandleCameraMovement();
+        if(cameraShake != null) SetLocalPosition(cameraShake, Random.insideUnitCircle * shake);
     }
 
     private void PlayerHidInSpot(HidingSpot hidingSpot)
@@ -65,11 +70,41 @@ public class CameraManager : MonoBehaviour
         if(screenRect.Contains(Utilities.GetMousePosition())) targetPosition = Utilities.Get2DMouseWorldPosition() + (Vector2)cameraOffset;
 
         if(!useOffset) targetPosition = follow.position;
-        SetPosition(Vector2.Lerp(follow.position, targetPosition, sensitivity));
+        SetPosition(transform, Vector2.Lerp(follow.position, targetPosition, sensitivity));
     }
 
-    private void SetPosition(Vector3 position)
+    private void SetPosition(Transform t, Vector3 position)
     {
-        transform.position = new Vector3(position.x, position.y, transform.position.z);
+        t.position = new Vector3(position.x, position.y, t.position.z);
+    }
+
+    private void SetLocalPosition(Transform t, Vector3 position)
+    {
+        t.localPosition = new Vector3(position.x, position.y, t.localPosition.z);
+    }
+
+    float shake;
+
+    public IEnumerator ShakeCoroutine(float shakeAmount, float fadeInTime, float length, float fadeOutTime)
+    {
+        float time = 0;
+        while (time < fadeInTime)
+        {
+            float t = time / fadeInTime;
+            shake = Mathf.Lerp(0, shakeAmount, t);
+            time += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+        yield return new WaitForSeconds(length);
+        time = 0;
+        while (time < fadeOutTime)
+        {
+            float t = time / fadeInTime;
+            shake = Mathf.Lerp(0, shakeAmount, 1 - t);
+            time += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+
+        shake = 0;
     }
 }
