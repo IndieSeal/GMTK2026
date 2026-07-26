@@ -33,7 +33,7 @@ public class DeathScreen : MonoBehaviour
 
     private IEnumerator RestartGame()
     {
-        yield return null;
+        yield return new WaitForSeconds(0.4f);
         
         Input.SubscribeToInputAction(Input.InteractAction, ChangeScenes, null, null);
 

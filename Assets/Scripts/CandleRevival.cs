@@ -33,7 +33,7 @@ public class CandleRevival : MonoBehaviour
         if(!collision.TryGetComponent(out Candle candle)) return;
 
         RuntimeManager.PlayOneShot(RefuelEvent, transform.position);
-        candle.AddCandleDuration(candleRestoreValue);
+        candle.AddCandleDuration(candleRestoreValue, true);
         gameObject.SetActive(false);
     }
 }

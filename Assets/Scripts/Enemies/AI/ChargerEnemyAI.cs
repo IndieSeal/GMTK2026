@@ -49,16 +49,17 @@ public class ChargerEnemyAI : BaseAI
             currentAttackCooldown = attackCooldown * cooldownMult;
             isCharging = false;
 
-            if(didHitPlayer){ playerGameObject.transform.GetComponent<HealthSystem>()?.Damage(attackDamage); }
+            //if(didHitPlayer){ playerGameObject.transform.GetComponent<HealthSystem>()?.Damage(attackDamage); }
             didHitPlayer = false;
             playerGameObject = null;
         }
         else if(layer == LayerMask.NameToLayer("Player"))
         {
             if(col.transform.name == "Candle"){ return; } // i dont like to hardcode this but i dont want to hit the candle
-            if(didHitPlayer){ return; } // we already hit the player no need to fuck them over some more
+            //if(didHitPlayer){ return; } // we already hit the player no need to fuck them over some more
             
             playerGameObject = col.gameObject;
+            playerGameObject.transform.GetComponent<HealthSystem>()?.Damage(attackDamage);
             didHitPlayer = true;
         }
         else { Debug.Log(layer); return; } // hit something that we shouldn't stop for

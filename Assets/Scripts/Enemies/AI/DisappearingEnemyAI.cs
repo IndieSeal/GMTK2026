@@ -18,9 +18,10 @@ public class DisappearingEnemyAI : BaseAI
         setTransparency(0);
     }
 
-    public new void Update()
+    public override void Update()
     {
         base.Update();
+        
         Shoot();
     }
 

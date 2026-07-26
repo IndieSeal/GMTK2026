@@ -14,6 +14,7 @@ public class HealthSystem : MonoBehaviour
     public int MaxHealth => maxHealth;
     public int CurrentHealth { get; private set; }
 
+    [SerializeField] private Renderer mainRenderer;
     [SerializeField] private Renderer hitRenderer;
 
     [SerializeField] private bool playSound = false;
@@ -24,6 +25,14 @@ public class HealthSystem : MonoBehaviour
     void Awake()
     {
         CurrentHealth = MaxHealth;
+    }
+
+    void Update()
+    {
+        if(mainRenderer != null && mainRenderer.TryGetComponent(out SpriteRenderer spr))
+        {
+            hitRenderer.GetComponent<SpriteRenderer>().sprite = spr.sprite;
+        }
     }
 
     public void Heal(int amount)
@@ -51,15 +60,13 @@ public class HealthSystem : MonoBehaviour
     float hitTime = 0.2f;
     private IEnumerator OnHit()
     {
-        Debug.Log("setting value");
-        
         float maxValue = hitTime / 2;
+        
+        if(mainRenderer != null) hitRenderer.gameObject.SetActive(true);
         
         float value = 0;
         while (value < maxValue)
         {
-        Debug.Log("plus");
-
             value += Time.deltaTime;
             hitRenderer.material.SetFloat("_HitEffectBlend", Mathf.Lerp(0, 1, value / maxValue));
             yield return null;
@@ -71,13 +78,13 @@ public class HealthSystem : MonoBehaviour
         value = 0;
         while (value < maxValue)
         {
-        Debug.Log("minus");
-
             value += Time.deltaTime;
             hitRenderer.material.SetFloat("_HitEffectBlend", Mathf.Lerp(1, 0, value / maxValue));
             yield return null;
         }
 
         hitRenderer.material.SetFloat("_HitEffectBlend", 0);
+
+        if(mainRenderer != null) hitRenderer.gameObject.SetActive(false);
     }
 }

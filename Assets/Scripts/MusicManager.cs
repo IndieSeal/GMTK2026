@@ -8,6 +8,7 @@ public class MusicManager : MonoBehaviour
     
     [SerializeField] private StudioEventEmitter chaseMusic;
     private Candle candle;
+    private bool isDead;
 
     void Awake()
     {
@@ -41,6 +42,7 @@ public class MusicManager : MonoBehaviour
 
     void Update()
     {
+        if(isDead) return;
         if(candle == null)
         {
             candle = FindAnyObjectByType<Candle>();
@@ -69,6 +71,8 @@ public class MusicManager : MonoBehaviour
 
     private void ChangeDeathParameter()
     {
+        RuntimeManager.StudioSystem.setParameterByName("Stress", 6);
+        isDead = true;
         chaseMusic.Stop();
     }
 

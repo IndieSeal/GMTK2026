@@ -11,12 +11,22 @@ public class Interacter : MonoBehaviour
     {
         TransitionManager.TransitionStarted += OnTransitionStarted;
         TransitionManager.TransitionEnded += OnTransitionEnded;
+
+        PlayerMovement.OnPlayerDeath += OnTransitionStarted;
+
+        ChaseSequence.OnChaseSequenceStart += OnTransitionStarted;
+        ChaseSequence.OnChaseSequenceChase += OnTransitionEnded;
     }
 
     void OnDisable()
     {
         TransitionManager.TransitionStarted -= OnTransitionStarted;
         TransitionManager.TransitionEnded -= OnTransitionEnded;
+
+        PlayerMovement.OnPlayerDeath -= OnTransitionStarted;
+        
+        ChaseSequence.OnChaseSequenceStart -= OnTransitionStarted;
+        ChaseSequence.OnChaseSequenceChase -= OnTransitionEnded;
     }
 
     void Start()

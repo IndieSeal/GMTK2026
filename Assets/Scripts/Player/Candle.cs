@@ -91,8 +91,10 @@ public class Candle : MonoBehaviour
 
     public float GetCandleValue() => Mathf.Lerp(1, 0, candleTimer / maxCandleDuration);
 
-    public void AddCandleDuration(float value)
+    public void AddCandleDuration(float value, bool refuelBullets = false)
     {
+        if(refuelBullets && !IsReloading) BulletCount = maxBulletCount;
+        
         candleTimer = Mathf.Clamp(candleTimer + value, 0, maxCandleDuration);
         if(candleTimer <= 0) OnCandleBurntOut?.Invoke();
     }
