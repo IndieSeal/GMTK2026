@@ -6,7 +6,9 @@ using UnityEngine;
 public class ChargerEnemyAI : BaseAI
 {
     public int attackDamage = 1;
-    bool isCharging = false;
+    [SerializeField] bool isCharging = false;
+    [SerializeField] bool didHitPlayer = false;
+    [SerializeField] GameObject playerGameObject = null;
 
     public new void Start()
     {
@@ -16,34 +18,49 @@ public class ChargerEnemyAI : BaseAI
     public new void Update()
     {
         base.Update();
-        
+
+        updatePlayerPushing();
         Shoot();
     }
-
     public override void updateNavigation(){ /* Nothing, we dont want to move */ }
 
-    /*
-    void OnTriggerEnter2D()
+    void updatePlayerPushing()
     {
-        /*
-        if(col.transform.tag == "Collisions"){}
-        else if(col.transform.tag == "Player")
-        {
-            col.transform.GetComponent<HealthSystem>().Damage(attackDamage);
-        }
-        else { Debug.Log(transform.tag); return; } // hit something that we shouldn't stop for
-        *./
-
-        // on collide
-        rb.linearVelocity = Vector2.zero;
-        currentAttackCooldown = attackCooldown;
-        isCharging = false;
-
+        if(playerGameObject == null){ return; }
+        // we're dragging the player
+        playerGameObject.transform.position = transform.position + ((Vector3)rb.linearVelocity.normalized * 1.5f);
+        Rigidbody2D playerRb = playerGameObject.GetComponent<Rigidbody2D>();
+        if(playerRb){ playerRb.linearVelocity = Vector2.zero; }
     }
-    */
-    void OnTriggerEnter2D(Collider2D collision)
+
+    void OnTriggerEnter2D(Collider2D col)
     {
-        Debug.Log(collision.transform.name);
+        if(isCharging == false){ return; }
+
+        int layer = col.gameObject.layer;
+        if(layer == LayerMask.NameToLayer("Walls"))
+        {
+            transform.position -= (Vector3)rb.linearVelocity.normalized * 1.5f; // move back a smidge to free our player
+            updatePlayerPushing();
+            rb.linearVelocity = Vector2.zero;
+
+            float cooldownMult = didHitPlayer ? 2 : 1;
+            currentAttackCooldown = attackCooldown * cooldownMult;
+            isCharging = false;
+
+            if(didHitPlayer){ playerGameObject.transform.GetComponent<HealthSystem>()?.Damage(attackDamage); }
+            didHitPlayer = false;
+            playerGameObject = null;
+        }
+        else if(layer == LayerMask.NameToLayer("Player"))
+        {
+            if(col.transform.name == "Candle"){ return; } // i dont like to hardcode this but i dont want to hit the candle
+            if(didHitPlayer){ return; } // we already hit the player no need to fuck them over some more
+            
+            playerGameObject = col.gameObject;
+            didHitPlayer = true;
+        }
+        else { Debug.Log(layer); return; } // hit something that we shouldn't stop for
     }
 
     // override the shoot function
@@ -55,6 +72,8 @@ public class ChargerEnemyAI : BaseAI
 
     private IEnumerator ShootCoroutine()
     {
+        // TODO: Check if the player is dead or hidden before attacking, if they're dead then we keep attacking and get an animation loop
+
         // shoot
         Vector2 playerPos = (Vector2)PlayerMovement.instance.transform.position;
         Vector2 myPos = (Vector2)transform.position;

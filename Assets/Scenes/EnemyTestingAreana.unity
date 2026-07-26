@@ -3302,7 +3302,6 @@ MonoBehaviour:
   cameraShake: {fileID: 0}
   sensitivity: 0.1
   offsetMoveSpeed: 0.2
-  shakeAmount: 1
 --- !u!114 &519420034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6836,6 +6835,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   rb: {fileID: 1680466125}
   animator: {fileID: 1708587777}
+  healthSystem: {fileID: 1680466127}
   movingSpeed: 5
   dashVelocity: 7
   dashDuration: 0.5
@@ -7292,7 +7292,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6133043278287911000, guid: 2b75c005737a773aeaf3735e7a549110, type: 3}
       propertyPath: m_IsTrigger
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7849409132950651141, guid: 2b75c005737a773aeaf3735e7a549110, type: 3}
       propertyPath: maxHealth
@@ -7353,7 +7353,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChargerEnemyAI
   attackProjectile: {fileID: 0}
-  moveSpeed: 5
+  moveSpeed: 7.5
   targetDistanceFromPlayer: 0
   endTargetPosition: {x: 0, y: 0}
   hasReachedAnyWaypoint: 1
