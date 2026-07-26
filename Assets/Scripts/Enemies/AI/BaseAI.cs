@@ -90,11 +90,12 @@ public class BaseAI : MonoBehaviour
         if(canShoot() == false){ return; }
         currentAttackCooldown = attackCooldown;
 
-        GameObject bulletInstance = SharedGameObjectPool.Rent(attackProjectile, transform.position, Quaternion.identity);
-        Vector2 heading = targetPosition - (Vector2)transform.position;
+        Vector2 heading = (targetPosition - (Vector2)transform.position).normalized;
+        Vector3 spawnPos = transform.position + (Vector3)(heading * 1.4f);
+        GameObject bulletInstance = SharedGameObjectPool.Rent(attackProjectile, spawnPos, Quaternion.identity);
 
         if(bulletInstance.TryGetComponent(out Rigidbody2D rb)){
-            rb.linearVelocity = heading.normalized * bulletVelocity;
+            rb.linearVelocity = heading * bulletVelocity;
         }
     }
 }
