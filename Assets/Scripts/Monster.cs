@@ -38,7 +38,9 @@ public class Monster : MonoBehaviour
         Door.OnRoomChanged += OnRoomChanged;
         PlayerMovement.OnPlayerDeath += OnPlayerDeath;
 
-        ChaseSequence.OnChaseSequenceStart += RandomizePosition;
+        Door.OnRoomChangedEnd += ChasedRoomChanged;
+
+        ChaseSequence.OnChaseSequenceStart += ChaseSequenceStarted;
         ChaseSequence.OnChaseSequenceTP += SpawnIn;
         ChaseSequence.OnChaseSequenceChase += StartCHASE;
     }
@@ -51,7 +53,9 @@ public class Monster : MonoBehaviour
         Door.OnRoomChanged -= OnRoomChanged;
         PlayerMovement.OnPlayerDeath -= OnPlayerDeath;
 
-        ChaseSequence.OnChaseSequenceStart -= RandomizePosition;
+        Door.OnRoomChangedEnd -= ChasedRoomChanged;
+
+        ChaseSequence.OnChaseSequenceStart -= ChaseSequenceStarted;
         ChaseSequence.OnChaseSequenceTP -= SpawnIn;
         ChaseSequence.OnChaseSequenceChase -= StartCHASE;
     }
@@ -72,6 +76,14 @@ public class Monster : MonoBehaviour
 
         if(isHiding) return;
         targetPosition = playerInstance.transform.position;
+    }
+
+    private void ChaseSequenceStarted()
+    {
+        StopAllCoroutines();
+
+        justDelay = true;
+        RandomizePosition();
     }
 
     private void SpawnIn()
@@ -101,7 +113,7 @@ public class Monster : MonoBehaviour
 
     private IEnumerator ChaseDelay()
     {
-        yield return new WaitForSeconds(1.5f);
+        if(!isFinalChasing) yield return new WaitForSeconds(1.5f);
         justDelay = false;
         isFinalChasing = true;
     }
@@ -112,7 +124,8 @@ public class Monster : MonoBehaviour
         velocity = Mathf.Lerp(minSpeed, maxSpeed, velocity);
 
         if(isFinalChasing) velocity = chaseSpeed;
-        if(Vector2.Distance(transform.position, playerInstance.transform.position) > speedyDistance) velocity *=  2;
+
+        if(!isFinalChasing && Vector2.Distance(transform.position, playerInstance.transform.position) > speedyDistance) velocity *= 2;
         
         transform.position = Vector2.MoveTowards(transform.position, targetPosition, velocity * Time.deltaTime);
     }
@@ -128,21 +141,31 @@ public class Monster : MonoBehaviour
         targetPosition = new Vector2(Random.Range(.5f, 20), Random.Range(20, 38));
     }
 
+    private Coroutine roomChangedCoroutine;
+
     private void OnRoomChanged()
     {
-        if(isFinalChasing) return;
+        if (isFinalChasing) return;
         
         targetPosition += Vector2.one * 5;
         justDelay = true;
         
-        StopAllCoroutines();
-        StartCoroutine(OnRoomChangedCoroutine());
+        if(roomChangedCoroutine != null) StopCoroutine(roomChangedCoroutine);
+        roomChangedCoroutine = StartCoroutine(OnRoomChangedCoroutine());
+    }
+
+    private void ChasedRoomChanged()
+    {
+        if(!isFinalChasing) return;
+
+        transform.position = playerInstance.transform.position + Vector3.up * 10;
     }
 
     private IEnumerator OnRoomChangedCoroutine()
     {
         yield return new WaitForSeconds(pauseDelay);
         justDelay = false;
+        roomChangedCoroutine = null;
     }
 
     private void StopHiding(HidingSpot hidingSpot)

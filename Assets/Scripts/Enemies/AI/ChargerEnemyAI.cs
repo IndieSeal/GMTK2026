@@ -26,11 +26,12 @@ public class ChargerEnemyAI : BaseAI
 
     void updatePlayerPushing()
     {
-        if(playerGameObject == null){ return; }
+        /*if(playerGameObject == null){ return; }
         // we're dragging the player
         playerGameObject.transform.position = transform.position + ((Vector3)rb.linearVelocity.normalized * 1.5f);
         Rigidbody2D playerRb = playerGameObject.GetComponent<Rigidbody2D>();
         if(playerRb){ playerRb.linearVelocity = Vector2.zero; }
+        */
     }
 
     void OnTriggerEnter2D(Collider2D col)

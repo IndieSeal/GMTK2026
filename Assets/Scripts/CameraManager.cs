@@ -42,6 +42,15 @@ public class CameraManager : MonoBehaviour
     private void OnChaseSequenceStart()
     {
         StartCoroutine(ShakeCoroutine(1f, 3f, 6f, 3f));
+        StartCoroutine(ConcurrentShakes());
+    }
+
+    private IEnumerator ConcurrentShakes()
+    {
+        yield return new WaitForSeconds(25);
+        StartCoroutine(ShakeCoroutine(0.3f, 1, 2f, 1f));
+        yield return new WaitForSeconds(8);
+        StartCoroutine(ShakeCoroutine(0.3f, 1, 2f, 1f));
     }
 
     void Start()

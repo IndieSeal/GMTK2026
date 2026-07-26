@@ -33,6 +33,7 @@ public class Candle : MonoBehaviour
         HidingSpot.OnPlayerExit += PlayerExitSpot;
 
         PlayerMovement.OnPlayerDeath += PlayerDied;
+        ChaseSequence.OnChaseSequenceChase += Chase;
     }
 
     void OnDisable()
@@ -41,8 +42,14 @@ public class Candle : MonoBehaviour
         HidingSpot.OnPlayerExit -= PlayerExitSpot;
 
         PlayerMovement.OnPlayerDeath -= PlayerDied;
+        ChaseSequence.OnChaseSequenceChase -= Chase;
+
         Input.UnsubscribeToInputAction(Input.FireAction, HandleShooting, null, null);
-        
+    }
+
+    private void Chase()
+    {
+        candleTimer = maxCandleDuration;
     }
 
     private void PlayerDied()

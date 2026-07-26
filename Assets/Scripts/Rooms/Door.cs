@@ -7,6 +7,7 @@ using UnityEngine;
 public class Door : MonoBehaviour
 {
     public static event Action OnRoomChanged;
+    public static event Action<Door> OnRoomChangedW;
     public static event Action OnRoomChangedEnd;
 
     public event Action OnOpen;
@@ -70,6 +71,7 @@ public class Door : MonoBehaviour
 
         linkedDoor.IsClosed = IsClosed;
         OnRoomChanged?.Invoke();
+        OnRoomChangedW?.Invoke(this);
 
         StartCoroutine(Footsteps());
         fadeCoroutine = StartCoroutine(TransitionManager.Instance.FadeCoroutine(1, () => MoveTowardsDoorCoroutine(player), () => MoveTowardsDoorFinal(player)));
@@ -149,7 +151,7 @@ public class Door : MonoBehaviour
             openCollider.gameObject.SetActive(false);
             HidePrompt();
         }
-        else ShowPrompt();
+        else if(playAudio) ShowPrompt();
 
         OnClose?.Invoke();
 
