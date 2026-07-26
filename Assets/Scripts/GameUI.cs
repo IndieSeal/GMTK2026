@@ -12,6 +12,21 @@ public class GameUI : MonoBehaviour
         candle = FindAnyObjectByType<Candle>();
     }
 
+    void OnEnable()
+    {
+        PlayerMovement.OnPlayerDeath += PlayerDied;
+    }
+
+    void OnDisable()
+    {
+        PlayerMovement.OnPlayerDeath -= PlayerDied;
+    }
+
+    private void PlayerDied()
+    {
+        gameObject.SetActive(false);
+    }
+
     void Update()
     {
         string startText = !candle.IsReloading ? candle.BulletCount.ToString() : "..."; 

@@ -18,6 +18,8 @@ public class Monster : MonoBehaviour
     
     void Awake()
     {
+        RandomizePosition();
+
         playerInstance = FindAnyObjectByType<PlayerMovement>();       
         candleInstance = FindAnyObjectByType<Candle>();
     }
@@ -28,6 +30,8 @@ public class Monster : MonoBehaviour
         HidingSpot.OnPlayerExit += StopHiding;
 
         Door.OnRoomChanged += OnRoomChanged;
+
+        PlayerMovement.OnPlayerDeath += OnPlayerDeath;
     }
 
     void OnDisable()
@@ -36,6 +40,12 @@ public class Monster : MonoBehaviour
         HidingSpot.OnPlayerExit -= StopHiding;
 
         Door.OnRoomChanged -= OnRoomChanged;
+        PlayerMovement.OnPlayerDeath -= OnPlayerDeath;
+    }
+
+    private void OnPlayerDeath()
+    {
+        gameObject.SetActive(false);
     }
 
     void Update()
@@ -52,14 +62,19 @@ public class Monster : MonoBehaviour
         float velocity = Mathf.InverseLerp(0.4f, 1, candleInstance.GetCandleValue());
         velocity = Mathf.Lerp(minSpeed, maxSpeed, velocity);
 
-        if(Vector2.Distance(transform.position, targetPosition) > speedyDistance) velocity = maxSpeed * 2;
+        if(Vector2.Distance(transform.position, playerInstance.transform.position) > speedyDistance) velocity = maxSpeed * 2;
         transform.position = Vector2.MoveTowards(transform.position, targetPosition, velocity * Time.deltaTime);
     }
 
     private void GoToRandomPosition(HidingSpot hidingSpot)
     {
         isHiding = true;
-        targetPosition = new Vector2(Random.Range(-100, 100), Random.Range(-100, 100));
+        RandomizePosition();
+    }
+
+    private void RandomizePosition()
+    {
+        targetPosition = new Vector2(Random.Range(.5f, 20), Random.Range(20, 38));
     }
 
     private void OnRoomChanged()

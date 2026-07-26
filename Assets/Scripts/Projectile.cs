@@ -39,7 +39,7 @@ public class Projectile : MonoBehaviour, IPoolCallbackReceiver
 
     private void ReturnToPool()
     {
-        if(hasReturnedToPool) return;
+        if(hasReturnedToPool || projectileDuration == -1) return;
         
         StopAllCoroutines();
         SharedGameObjectPool.Return(gameObject);

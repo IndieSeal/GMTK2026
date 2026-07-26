@@ -16,11 +16,7 @@ public class EndTutorial : MonoBehaviour
 
     private void FinishTutorial()
     {
-        Debug.Log("finish");
-        foreach(Tutorial1 tut in FindObjectsByType<Tutorial1>())
-        {
-            Destroy(tut.gameObject);
-        }
+        foreach(Tutorial1 tut in FindObjectsByType<Tutorial1>()) Destroy(tut.gameObject);
 
         finalDoor.Close();
         finalDoor.enabled = false;

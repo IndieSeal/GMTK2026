@@ -19,23 +19,36 @@ public class CameraManager : MonoBehaviour
     private float targetOffsetX = 0f;
     private bool useOffset = true;
 
-    [SerializeField] private float shakeAmount = 1;
-
     void OnEnable()
     {
         HidingSpot.OnPlayerHid += PlayerHidInSpot;
         HidingSpot.OnPlayerExit += PlayerExitSpot;
+
+        PlayerMovement.OnPlayerDeath += OnCharacterDeath;
     }
 
     void OnDisable()
     {
         HidingSpot.OnPlayerHid -= PlayerHidInSpot;
         HidingSpot.OnPlayerExit -= PlayerExitSpot;
+
+        PlayerMovement.OnPlayerDeath -= OnCharacterDeath;
     }
 
     void Start()
     {
         Input.SubscribeToInputAction(Input.MoveAction, null, ChangeMovingDirection, ChangeMovingDirection);
+    }
+
+    private void OnCharacterDeath()
+    {
+        StartCoroutine(ShakeCoroutine(1f, 0.2f, 1f, 0.2f));
+        DisableOffset();
+    }
+
+    private void DisableOffset()
+    {
+        useOffset = false;
     }
 
     private void ChangeMovingDirection()
@@ -51,7 +64,7 @@ public class CameraManager : MonoBehaviour
 
     private void PlayerHidInSpot(HidingSpot hidingSpot)
     {
-        useOffset = false;
+        DisableOffset();
         oldFollow = follow;
         follow = hidingSpot.transform;
     }

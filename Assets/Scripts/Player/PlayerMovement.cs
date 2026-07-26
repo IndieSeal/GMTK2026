@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -9,11 +10,14 @@ public class PlayerMovement : MonoBehaviour
         Hiding
     }
     
+    public static event Action OnPlayerDeath;
+    
     public KidInput Input => KidInput.Instance;
     
     [Header("Components")]
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Animator animator;
+    [SerializeField] private HealthSystem healthSystem;
 
     [Header("Moving")]
     [SerializeField] private float movingSpeed = 5;
@@ -45,6 +49,8 @@ public class PlayerMovement : MonoBehaviour
 
         TransitionManager.TransitionStarted += StopMovement;
         TransitionManager.TransitionEnded += StartMovement;
+
+        healthSystem.OnCharacterDeath += OnDeath;
     }
 
     void OnDisable()
@@ -54,12 +60,20 @@ public class PlayerMovement : MonoBehaviour
 
         TransitionManager.TransitionStarted -= StopMovement;
         TransitionManager.TransitionEnded -= StartMovement;
+
+        healthSystem.OnCharacterDeath -= OnDeath;
     }
 
     void Start()
     {
         Input.SubscribeToInputAction(Input.MoveAction, null, ChangeMovingDirection, ChangeMovingDirection);
         Input.SubscribeToInputAction(Input.DashAction, StartDash, null, null);
+    }
+
+    void OnDestroy()
+    {
+        Input.UnsubscribeToInputAction(Input.MoveAction, null, ChangeMovingDirection, ChangeMovingDirection);
+        Input.UnsubscribeToInputAction(Input.DashAction, StartDash, null, null);
     }
 
     void FixedUpdate()
@@ -146,6 +160,14 @@ public class PlayerMovement : MonoBehaviour
     }
 
     #endregion
+
+    private void OnDeath()
+    {
+        StopMovement();
+        animator.SetTrigger("Death");
+
+        OnPlayerDeath?.Invoke();
+    }
 
     public void StopMovement()
     {

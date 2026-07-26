@@ -31,12 +31,23 @@ public class Candle : MonoBehaviour
     {
         HidingSpot.OnPlayerHid += PlayerHidInSpot;
         HidingSpot.OnPlayerExit += PlayerExitSpot;
+
+        PlayerMovement.OnPlayerDeath += PlayerDied;
     }
 
     void OnDisable()
     {
         HidingSpot.OnPlayerHid -= PlayerHidInSpot;
         HidingSpot.OnPlayerExit -= PlayerExitSpot;
+
+        PlayerMovement.OnPlayerDeath -= PlayerDied;
+        Input.UnsubscribeToInputAction(Input.FireAction, HandleShooting, null, null);
+        
+    }
+
+    private void PlayerDied()
+    {
+        gameObject.SetActive(false);
     }
 
     private void PlayerHidInSpot(HidingSpot hidingSpot)

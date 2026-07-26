@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
@@ -50,41 +51,41 @@ public class KidInput : Singleton<KidInput>
 
     private void SetupAction(InputAction inputAction)
     {
-        onStartActions.TryAdd(inputAction, new List<Action>());
-        onPerformActions.TryAdd(inputAction, new List<Action>());
-        onStopActions.TryAdd(inputAction, new List<Action>());
-
         inputAction.started += ActionStarted;
         inputAction.performed += ActionPerformed;
         inputAction.canceled += ActionStopped;
+
+        onStartActions.TryAdd(inputAction, new List<Action>());
+        onPerformActions.TryAdd(inputAction, new List<Action>());
+        onStopActions.TryAdd(inputAction, new List<Action>());
     }
 
     private void UnsetupAction(InputAction inputAction)
     {
-        onStartActions.Remove(inputAction);
-        onPerformActions.Remove(inputAction);
-        onStopActions.Remove(inputAction);
-
         inputAction.started -= ActionStarted;
         inputAction.performed -= ActionPerformed;
         inputAction.canceled -= ActionStopped;
+
+        onStartActions.Remove(inputAction);
+        onPerformActions.Remove(inputAction);
+        onStopActions.Remove(inputAction);
     }
 
     private void ActionStarted(CallbackContext ctx)
     {
-        var list = onStartActions[ctx.action];
+        var list = onStartActions[ctx.action].ToList();
         list.ForEach(x => x?.Invoke());
     }
 
     private void ActionPerformed(CallbackContext ctx)
     {
-        var list = onPerformActions[ctx.action];
+        var list = onPerformActions[ctx.action].ToList();
         list.ForEach(x => x?.Invoke());
     }
 
     private void ActionStopped(CallbackContext ctx)
     {
-        var list = onStopActions[ctx.action];
+        var list = onStopActions[ctx.action].ToList();
         list.ForEach(x => x?.Invoke());
     }
 

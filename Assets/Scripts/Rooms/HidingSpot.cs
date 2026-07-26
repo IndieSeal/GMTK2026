@@ -56,6 +56,8 @@ public class HidingSpot : MonoBehaviour, IInteractable
 
             playerTransform.position = lastPosition;
             playerTransform = null;
+
+            ChangePrompt();
             
             OnPlayerExit?.Invoke(this);
         }

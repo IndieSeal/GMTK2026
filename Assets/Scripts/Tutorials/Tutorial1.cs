@@ -7,6 +7,7 @@ public class Tutorial1 : MonoBehaviour
     [Header("General")]
     [SerializeField] private GameObject dialogueParent;
     [SerializeField] private TypewriterCore typewriter;
+    [SerializeField] private Animator animator;
     private Candle candle;
     
     [Header("Phase 1")]
@@ -74,6 +75,8 @@ public class Tutorial1 : MonoBehaviour
         waitForDialogue = false;
         
         dialogueParent.SetActive(true);
+
+        animator.SetBool("IsTalking", true);
         
         typewriter.TextAnimator.textFull = $"<?start>{dialogue}";
         typewriter.onTextShowed.AddListener(OnDialogueComplete);
@@ -87,6 +90,8 @@ public class Tutorial1 : MonoBehaviour
 
     private void EndDialogue()
     {
+        animator.SetBool("IsTalking", false);
+        
         typewriter.onTextShowed.RemoveListener(OnDialogueComplete);
         
         dialogueParent.SetActive(false);
