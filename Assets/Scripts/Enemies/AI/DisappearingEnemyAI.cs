@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class DisappearingEnemy : BaseAI
+public class DisappearingEnemyAI : BaseAI
 {
     public float reappearTelegraphTime = 0.5f;
 

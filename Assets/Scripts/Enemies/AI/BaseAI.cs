@@ -6,6 +6,7 @@ public class BaseAI : MonoBehaviour
 {
     [System.NonSerialized]
     public SpriteRenderer spriteRenderer;
+    [System.NonSerialized]
     public Rigidbody2D rb;
     public GameObject attackProjectile; // if left null then the enemy will be treated as a melee enemy
 
@@ -13,12 +14,14 @@ public class BaseAI : MonoBehaviour
     public float moveSpeed = 4f;
     public float targetDistanceFromPlayer = 10f; // set to 0 for melee enemies
     public Vector2 endTargetPosition = Vector2.zero;
+    [System.NonSerialized]
     public List<PositionNode> moveWayPoints = new();
     public bool hasReachedAnyWaypoint = true; // if true will recalculate new path
 
     // Shooting
     public float attackCooldown = 0f;
-    float currentAttackCooldown = 2f;
+    [System.NonSerialized]
+    public float currentAttackCooldown = 2f;
     public float bulletVelocity = 5f;
 
 
@@ -34,6 +37,12 @@ public class BaseAI : MonoBehaviour
     {
         currentAttackCooldown -= Time.deltaTime;
 
+        updateNavigation();
+    }
+
+    // virtual so we can override it in our subclasses
+    public virtual void updateNavigation()
+    {
         // update the target pos. Try to get a set amount of distance away from the player
         Vector2 playerPos = (Vector2)PlayerMovement.instance.transform.position;
         Vector2 enemyPos = (Vector2)transform.position;
@@ -47,6 +56,11 @@ public class BaseAI : MonoBehaviour
             PositionNode end = AStarPathfinder.instance.getNearestNodeFromPos(endTargetPosition);
             moveWayPoints = AStarPathfinder.instance.generatePath(start, end);
             moveWayPoints.Add(end); // i dont think `end` is being added in the A* algorithm so imma add it here rq
+
+            foreach(PositionNode pn in moveWayPoints)
+            {
+                Debug.Log(pn.position);
+            }
 
             hasReachedAnyWaypoint = false;
         }
@@ -66,7 +80,6 @@ public class BaseAI : MonoBehaviour
         }
 
         Vector2 waypointPos = moveWayPoints[0].position;
-        //waypointPos += Vector2.up * 1f; // add `Vector2.up` to the waypoint pos to maybe not let it sink down for no reason?
         rb.linearVelocity = (waypointPos - enemyPos).normalized * moveSpeed;
     }
 
