@@ -18,6 +18,6 @@ public class MenuScreen : MonoBehaviour
 
     private void ChangeScene()
     {
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("Newspaper");
     }
 }

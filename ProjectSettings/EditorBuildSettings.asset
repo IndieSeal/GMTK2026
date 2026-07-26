@@ -9,8 +9,14 @@ EditorBuildSettings:
     path: Assets/Scenes/Menu.unity
     guid: 2fe595035f501a0f3ab0fa7fbcc79707
   - enabled: 1
+    path: Assets/Scenes/Newspaper.unity
+    guid: 87a549eaf70cc4389a8daa5cb28763bc
+  - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/Win.unity
+    guid: 9656ed71a3024cb118d227e601ceb787
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 954f5ed83a505a331a733cef5a9f76ad, type: 2}
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}

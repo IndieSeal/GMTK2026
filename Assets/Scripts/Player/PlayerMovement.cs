@@ -143,7 +143,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if(!isDashing) return;
         
-        rb.linearVelocity = dashingDirection * dashVelocity;
+        //rb.linearVelocity = dashingDirection * dashVelocity;
     }
 
     private void StartDash()
@@ -174,7 +174,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void StopDash()
     {
-        rb.linearVelocity = Vector2.zero;
+        //rb.linearVelocity = Vector2.zero;
         isDashing = false;
         
         if(dashCoroutine == null) return;
@@ -194,6 +194,9 @@ public class PlayerMovement : MonoBehaviour
 
     public void StopMovement()
     {
+        rb.linearVelocity = Vector2.zero;
+        animator.SetBool("IsMoving", false);
+        
         StopDash();
         playerState = PlayerState.Hiding;
     }

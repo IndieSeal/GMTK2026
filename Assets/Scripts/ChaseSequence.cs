@@ -14,11 +14,11 @@ public class ChaseSequence : MonoBehaviour
     [SerializeField] private Door previousClosedDoor;
     [SerializeField] private Door generalClosedDoor;
 
+    [SerializeField] private StudioEventEmitter earthquakeEmitter;
+
     [SerializeField] private List<Room> rooms = new List<Room>();
     private int roomsCompleted;
     private bool shouldBeDone;
-
-    [SerializeField] private EventReference EarthquakeSound;
 
     void OnEnable()
     {
@@ -44,7 +44,8 @@ public class ChaseSequence : MonoBehaviour
 
     private void StartChase()
     {
-        RuntimeManager.PlayOneShot(EarthquakeSound, transform.position);
+        earthquakeEmitter.Play();
+        //RuntimeManager.PlayOneShot(EarthquakeSound, transform.position);
 
         previousClosedDoor.enabled = true;
         generalClosedDoor.enabled = true;

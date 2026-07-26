@@ -12,6 +12,18 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 6362348856255204980, guid: 86d31d107b9a00db5aeed85f9ab6b100, type: 3}
+      propertyPath: m_Color.b
+      value: 0.1745283
+      objectReference: {fileID: 0}
+    - target: {fileID: 6362348856255204980, guid: 86d31d107b9a00db5aeed85f9ab6b100, type: 3}
+      propertyPath: m_Color.g
+      value: 0.1745283
+      objectReference: {fileID: 0}
+    - target: {fileID: 6362348856255204980, guid: 86d31d107b9a00db5aeed85f9ab6b100, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6570887796550925665, guid: 86d31d107b9a00db5aeed85f9ab6b100, type: 3}
       propertyPath: m_Name
       value: FireBullet Variant
@@ -60,6 +72,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8880172813477284737, guid: 86d31d107b9a00db5aeed85f9ab6b100, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 59202c4b0c5be6df5bd0ff411e31a950, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
