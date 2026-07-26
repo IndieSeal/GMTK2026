@@ -57,11 +57,6 @@ public class BaseAI : MonoBehaviour
             moveWayPoints = AStarPathfinder.instance.generatePath(start, end);
             moveWayPoints.Add(end); // i dont think `end` is being added in the A* algorithm so imma add it here rq
 
-            foreach(PositionNode pn in moveWayPoints)
-            {
-                Debug.Log(pn.position);
-            }
-
             hasReachedAnyWaypoint = false;
         }
 

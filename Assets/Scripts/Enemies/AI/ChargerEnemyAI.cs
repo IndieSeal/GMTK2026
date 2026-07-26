@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ChargerEnemyAI : BaseAI
 {
+    public int attackDamage = 1;
     bool isCharging = false;
 
     public new void Start()
@@ -20,14 +22,28 @@ public class ChargerEnemyAI : BaseAI
 
     public override void updateNavigation(){ /* Nothing, we dont want to move */ }
 
+    /*
     void OnTriggerEnter2D()
     {
-        Debug.Log("Gah stings everytime!!");
+        /*
+        if(col.transform.tag == "Collisions"){}
+        else if(col.transform.tag == "Player")
+        {
+            col.transform.GetComponent<HealthSystem>().Damage(attackDamage);
+        }
+        else { Debug.Log(transform.tag); return; } // hit something that we shouldn't stop for
+        *./
+
         // on collide
         rb.linearVelocity = Vector2.zero;
         currentAttackCooldown = attackCooldown;
         isCharging = false;
 
+    }
+    */
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        Debug.Log(collision.transform.name);
     }
 
     // override the shoot function
@@ -39,7 +55,6 @@ public class ChargerEnemyAI : BaseAI
 
     private IEnumerator ShootCoroutine()
     {
-        Debug.Log("Charging!!");
         // shoot
         Vector2 playerPos = (Vector2)PlayerMovement.instance.transform.position;
         Vector2 myPos = (Vector2)transform.position;
