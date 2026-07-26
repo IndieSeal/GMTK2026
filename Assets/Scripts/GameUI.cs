@@ -15,11 +15,15 @@ public class GameUI : MonoBehaviour
     void OnEnable()
     {
         PlayerMovement.OnPlayerDeath += PlayerDied;
+
+        ChaseSequence.OnChaseSequenceStart += PlayerDied;
     }
 
     void OnDisable()
     {
         PlayerMovement.OnPlayerDeath -= PlayerDied;
+
+        ChaseSequence.OnChaseSequenceStart -= PlayerDied;
     }
 
     private void PlayerDied()
